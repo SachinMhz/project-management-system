@@ -2,7 +2,7 @@ const pool = require("../db");
 
 //get all users
 //method - get
-//url - /api/admin/users
+//url - /api/admin/tasks
 const getAllTasksFromProject = async (req, res, next) => {
   try {
     const { project_id } = req.body;
@@ -19,7 +19,7 @@ const getAllTasksFromProject = async (req, res, next) => {
 
 //get all users
 //method - get
-//url - /api/admin/users
+//url - /api/admin/tasks
 const getUserTasksFromProject = async (req, res, next) => {
   try {
     const { project_id, user_id } = req.body;
@@ -35,28 +35,8 @@ const getUserTasksFromProject = async (req, res, next) => {
 };
 
 //get all users on project
-//method - get
-//url - /api/admin/users-on-project
-const getProjectEnrolled = async (req, res, next) => {
-  const user_id = req.body.user_id;
-  try {
-    const projects = await pool.query(
-      `WITH project_user_bridge AS (SELECT project_id FROM user_on_project where user_id = $1)
-          SELECT  p.project_id, p.name FROM
-          projects p JOIN project_user_bridge b 
-          ON p.project_id = b.project_id;`,
-      [user_id]
-    );
-    res.json(projects.rows);
-  } catch (err) {
-    next(err);
-    logger.error(err);
-  }
-};
-
-//get all users on project
 //method - post
-//url - /api/admin/users-create
+//url - /api/admin/tasks-create
 const createTask = async (req, res, next) => {
   try {
     req
@@ -112,7 +92,7 @@ const createTask = async (req, res, next) => {
 
 //update an user
 //method - put
-//url - /api/admin/users-update
+//url - /api/admin/tasks-update
 const updateTask = async (req, res, next) => {
   try {
     req
@@ -164,9 +144,35 @@ const updateTask = async (req, res, next) => {
   }
 };
 
+//update an user
+//method - put
+//url - /api/admin/tasks-update
+const changeUser = async (req, res, next) => {
+  try {
+    const { user_id, previous_assignee_id, task_id } = req.body;
+
+    let query = `UPDATE tasks SET user_id= $1, previous_assignee_id=$2
+                       WHERE task_id = $3  RETURNING *`;
+
+    let value = [user_id, previous_assignee_id, task_id];
+    try {
+      const task = await pool.query(query, value);
+      res.json({
+        task: task.rows[0],
+        msg: "user changed successfully",
+        status: 200,
+      });
+    } catch (err) {
+      next({ msg: err, status: 300, u_msg: "error changing the assigned user" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 //delete an user -- actually change role to inactive
 //method - put
-//url - /api/admin/users-delete
+//url - /api/admin/tasks-delete
 const deleteTask = async (req, res, next) => {
   try {
     const { task_id } = req.body;
@@ -191,4 +197,5 @@ module.exports = {
   createTask,
   updateTask,
   deleteTask,
+  changeUser,
 };

@@ -27,7 +27,7 @@ CREATE TABLE tasks(
     task_id SERIAL PRIMARY key,
     project_id integer NOT NULL,
     user_id integer,
-    previous_assignee_id integer,
+    previous_user_id integer,
     title varchar NOT NULL,
     description varchar(250) NOT NULL,
     deadline date NOT NULL,

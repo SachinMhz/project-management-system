@@ -21,9 +21,9 @@ router.route("/projects-delete").delete(projectController.deleteProject);
 //CRUD on tasks
 router.route("/tasks").get(taskController.getAllTasksFromProject);
 router.route("/tasks-user").get(taskController.getUserTasksFromProject);
-// router.route("/tasks-enrolled").get(taskController.getProjectEnrolled);
 router.route("/tasks-create").post(taskController.createTask);
 router.route("/tasks-update").put(taskController.updateTask);
+router.route("/tasks-change-user").put(taskController.changeUser);
 router.route("/tasks-delete").delete(taskController.deleteTask);
 
 module.exports = router;

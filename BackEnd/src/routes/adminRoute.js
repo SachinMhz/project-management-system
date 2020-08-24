@@ -2,6 +2,7 @@ const router = require("express").Router();
 const userController = require("../controllers/usersController");
 const projectController = require("../controllers/projectController");
 const taskController = require("../controllers/taskController");
+const commentController = require("../controllers/commentController");
 
 // CRUD on users
 router.route("/users").get(userController.getAllUsers);
@@ -25,5 +26,13 @@ router.route("/tasks-create").post(taskController.createTask);
 router.route("/tasks-update").put(taskController.updateTask);
 router.route("/tasks-change-user").put(taskController.changeUser);
 router.route("/tasks-delete").delete(taskController.deleteTask);
+
+
+//CRUD on tasks
+router.route("/comments").get(commentController.getAllCommentsFromTask);
+router.route("/comment").get(commentController.getComment);
+router.route("/comments-create").post(commentController.createComment);
+router.route("/comments-update").put(commentController.updateComment);
+router.route("/comments-delete").delete(commentController.deleteComment);
 
 module.exports = router;

@@ -43,6 +43,9 @@ CREATE TABLE comments(
     commenter_name varchar(50) NOT NULL,
     comment varchar(250) NOT NULL,
     comment_time TIME DEFAULT CURRENT_TIME,
+    FOREIGN KEY (task_id) 
+	  REFERENCES tasks(task_id)
+      ON DELETE CASCADE
 );
 
 CREATE TABLE tags(

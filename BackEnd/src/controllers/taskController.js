@@ -61,9 +61,9 @@ const createTask = async (req, res, next) => {
         deadline,
         user_id,
         project_id,
-        previous_assignee_id,
+        previous_user_id,
       } = req.body;
-      let query = `INSERT INTO tasks (title, description,  user_id, project_id, deadline, previous_assignee_id )
+      let query = `INSERT INTO tasks (title, description,  user_id, project_id, deadline, previous_user_id )
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
 
       let value = [
@@ -72,7 +72,7 @@ const createTask = async (req, res, next) => {
         user_id,
         project_id,
         deadline,
-        previous_assignee_id,
+        previous_user_id,
       ];
       try {
         const task = await pool.query(query, value);
@@ -113,11 +113,11 @@ const updateTask = async (req, res, next) => {
         deadline,
         user_id,
         project_id,
-        previous_assignee_id,
+        previous_user_id,
         task_id,
       } = req.body;
 
-      let query = `UPDATE tasks SET title = $1, description=$2, deadline=$3, user_id= $4, previous_assignee_id=$5
+      let query = `UPDATE tasks SET title = $1, description=$2, deadline=$3, user_id= $4, previous_user_id=$5
                      WHERE task_id = $6  RETURNING *`;
 
       let value = [
@@ -125,7 +125,7 @@ const updateTask = async (req, res, next) => {
         description,
         deadline,
         user_id,
-        previous_assignee_id,
+        previous_user_id,
         task_id,
       ];
       try {
@@ -149,12 +149,12 @@ const updateTask = async (req, res, next) => {
 //url - /api/admin/tasks-update
 const changeUser = async (req, res, next) => {
   try {
-    const { user_id, previous_assignee_id, task_id } = req.body;
+    const { user_id, previous_user_id, task_id } = req.body;
 
-    let query = `UPDATE tasks SET user_id= $1, previous_assignee_id=$2
+    let query = `UPDATE tasks SET user_id= $1, previous_user_id=$2
                        WHERE task_id = $3  RETURNING *`;
 
-    let value = [user_id, previous_assignee_id, task_id];
+    let value = [user_id, previous_user_id, task_id];
     try {
       const task = await pool.query(query, value);
       res.json({

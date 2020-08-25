@@ -1,0 +1,10 @@
+.container--center {
+  flex: 1;
+  margin-top: 200px;
+  max-width: 600px;
+  justify-content: center;
+  align-self: center;
+  align-content: center;
+  justify-self: center;
+  margin: auto;
+}

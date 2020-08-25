@@ -3,9 +3,11 @@ const userController = require("../controllers/usersController");
 const projectController = require("../controllers/projectController");
 const taskController = require("../controllers/taskController");
 const commentController = require("../controllers/commentController");
+const tagController = require("../controllers/tagController");
 
 // CRUD on users
 router.route("/users").get(userController.getAllUsers);
+router.route("/user/:user_id").get(userController.getUser);
 router
   .route("/users-on-project")
   .get(userController.getAllUsersAssignedOnProject);
@@ -27,12 +29,18 @@ router.route("/tasks-update").put(taskController.updateTask);
 router.route("/tasks-change-user").put(taskController.changeUser);
 router.route("/tasks-delete").delete(taskController.deleteTask);
 
-
 //CRUD on tasks
 router.route("/comments").get(commentController.getAllCommentsFromTask);
 router.route("/comment").get(commentController.getComment);
 router.route("/comments-create").post(commentController.createComment);
 router.route("/comments-update").put(commentController.updateComment);
 router.route("/comments-delete").delete(commentController.deleteComment);
+
+//CRUD on tasks
+router.route("/tags").get(tagController.getAllTaggedTasks);
+// router.route("/tag").get(tagController.get);
+router.route("/tags-create").post(tagController.createTag);
+// router.route("/tags-update").put(tagController.updateComment);
+router.route("/tags-delete").delete(tagController.deleteTag);
 
 module.exports = router;

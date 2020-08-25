@@ -14,13 +14,22 @@ CREATE TABLE projects (
     project_id SERIAL PRIMARY key,
     name varchar(50) UNQIUE NOT NULL,
     description varchar(250) NOT NULL,
-    manager_id integer NOT NULL
+    manager_id integer NOT NULL,
+    FOREIGN KEY (manager_id) 
+	  REFERENCES users(user_id)
+      ON DELETE CASCADE
 );
 
 CREATE TABLE user_on_project (
     id SERIAL PRIMARY KEY,
     project_id integer NOT NULL,
-    user_id integer NOT NULL
+    user_id integer NOT NULL,
+    FOREIGN KEY (project_id) 
+	  REFERENCES projects(project_id)
+      ON DELETE CASCADE,
+    FOREIGN KEY (user_id) 
+	  REFERENCES users(user_id)
+      ON DELETE CASCADE
 );
 
 CREATE TABLE tasks(
@@ -45,7 +54,10 @@ CREATE TABLE comments(
     comment_time TIME DEFAULT CURRENT_TIME,
     FOREIGN KEY (task_id) 
 	  REFERENCES tasks(task_id)
-      ON DELETE CASCADE
+      ON DELETE CASCADE,
+    FOREIGN KEY (commenter_id) 
+	  REFERENCES users(user_id)
+      ON DELETE SET NULL
 );
 
 CREATE TABLE tags(
@@ -53,6 +65,13 @@ CREATE TABLE tags(
     task_id integer NOT NULL,
     tagger_id integer NOT NULL,
     tagged_id integer NOT NULL,
-    tagger_name varchar(50) NOT NULL,
-    tagged_name varchar(50) NOT NULL,
+    FOREIGN KEY (task_id) 
+	  REFERENCES tasks(task_id)
+      ON DELETE CASCADE,
+    FOREIGN KEY (tagger_id) 
+	  REFERENCES users(user_id)
+      ON DELETE CASCADE,
+    FOREIGN KEY (tagged_id) 
+	  REFERENCES users(user_id)
+      ON DELETE CASCADE
 );

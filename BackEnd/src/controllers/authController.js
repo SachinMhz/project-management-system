@@ -4,6 +4,10 @@ const helper = require("../utils/helper");
 
 const saltRounds = 10; // saltRounds for bcrypt
 
+
+//login to server
+//method : POST
+//api : /api/auth/login
 const login = async (req, res, next) => {
   try {
     req
@@ -41,9 +45,8 @@ const login = async (req, res, next) => {
           return next({ msg: "incorrect password", status: 200 });
         }
 
-        let data = { user_id };
-        let token = helper.createToken(data);
-        res.json({ data, token });
+        let token = helper.createToken({user_id});
+        res.json({ user_id, token });
       });
     }
   } catch (err) {
@@ -51,6 +54,9 @@ const login = async (req, res, next) => {
   }
 };
 
+//create new user
+//method : POST
+//api : /api/auth/register
 const register = async (req, res, next) => {
   try {
     req
@@ -82,6 +88,9 @@ const register = async (req, res, next) => {
       // const todo = await pool.query("SELECT * FROM todo ORDER BY id ASC");
       const { email, password, display_name, role } = req.body;
 
+      if (role === "admin")
+        next({ msg: "user with admin role cannot be created", status: 300 });
+
       //show custom msg if email already exist
       const checkEmail = await pool.query(
         "SELECT email FROM users where email=$1",
@@ -100,12 +109,19 @@ const register = async (req, res, next) => {
 
             const value = [email, hash, display_name, role];
             try {
-              const todo = await pool.query(query, value);
-              res.json({ msg: "registered successful", status: 200 });
+              const user = await pool.query(query, value);
+              res.json({
+                data: user.rows[0],
+                error: user.rows[0]
+                  ? ""
+                  : "Cannot create new user, check req.body",
+                msg: "register query was successful",
+                status: 200,
+              });
               // Store hash in your password DB.
             } catch (err) {
               console.log(err);
-              next({ msg: err, status: 300, u_msg: "error inserting" });
+              next({ msg: err, status: 300, u_msg: "error inserting new user" });
             }
           });
         });

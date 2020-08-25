@@ -41,3 +41,7 @@ CREATE TABLE tags(
     tagged_name varchar(50) not null,
     comment varchar(250) not null
     );
+
+
+UPDATE tasks SET user_id= 1, previous_assignee_id=2
+                       WHERE task_id = 3  RETURNING *;

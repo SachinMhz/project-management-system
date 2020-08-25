@@ -1,0 +1,16 @@
+.dropdown {
+  float: right;
+  padding: 5px 15px;
+  border: 1px solid #d3d5d6;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 5px;
+  background-color: #f3f4f6;
+}
+.dropdown__title {
+}
+.dropdown__option {
+  padding: 0px 5px;
+}
+.dropdown__icon {
+}

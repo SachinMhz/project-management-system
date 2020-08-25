@@ -19,6 +19,23 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
+//get one user
+//method - get
+//url - /api/admin/user
+const getUser = async (req, res, next) => {
+  try {
+    const user_id = Number(req.params.user_id);
+    const users = await pool.query(
+      "SELECT * FROM users WHERE role <> 'inactive' AND user_id = $1 LIMIT 1",
+      [user_id]
+    );
+    res.json(users.rows[0]);
+  } catch (err) {
+    next(err);
+    logger.error(err);
+  }
+};
+
 //get all users on project
 //method - get
 //url - /api/admin/users-on-project
@@ -44,7 +61,6 @@ const getAllUsersAssignedOnProject = async (req, res, next) => {
 //method - post
 //url - /api/admin/users-create
 const createUser = require("./authController").register;
-
 
 //update an user
 //method - put
@@ -135,6 +151,7 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
+  getUser,
   getAllUsers,
   getAllUsersAssignedOnProject,
   updateUser,

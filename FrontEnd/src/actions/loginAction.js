@@ -18,6 +18,10 @@ export function loginToServer(email, password) {
     if (data.token) {
       window.localStorage.setItem("token", data.token);
       window.localStorage.setItem("user_id", data.user_id);
+      window.localStorage.setItem("display_name", data.display_name);
+      window.localStorage.setItem("role", data.role);
+      window.localStorage.setItem("email", data.email);
+      // console.log(data);
       console.log("token and user_id set to local storage");
     }
     dispatch({

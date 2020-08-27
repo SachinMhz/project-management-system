@@ -5,12 +5,14 @@ const pool = require("../db");
 //url - /api/admin/tasks
 const getAllTasksFromProject = async (req, res, next) => {
   try {
-    const { project_id } = req.body;
+    const { project_id } = req.params;
     const tasks = await pool.query(
-      "SELECT * FROM tasks WHERE project_id = $1 ORDER BY project_id ASC",
+      `SELECT t.*, u.display_name FROM tasks t
+        LEFT OUTER JOIN users u ON t.user_id = u.user_id
+        WHERE t.project_id = $1 ORDER BY project_id ASC`,
       [project_id]
     );
-    res.json(tasks.rows);
+    res.json({ data: tasks.rows, msg: "task fetched" });
   } catch (err) {
     next(err);
     logger.error(err);
@@ -27,7 +29,7 @@ const getUserTasksFromProject = async (req, res, next) => {
       "SELECT * FROM tasks WHERE project_id = $1 AND user_id= $2 ORDER BY project_id ASC",
       [project_id, user_id]
     );
-    res.json(tasks.rows);
+    res.json({ data: tasks.rows, msg: "task fetched" });
   } catch (err) {
     next(err);
     logger.error(err);
@@ -43,11 +45,12 @@ const createTask = async (req, res, next) => {
       .checkBody("project_id")
       .notEmpty()
       .withMessage("Project Name is required");
+
+    req.checkBody("title").notEmpty().withMessage("title is required");
     req
       .checkBody("description")
       .notEmpty()
       .withMessage("Description is required");
-    req.checkBody("title").notEmpty().withMessage("title is required");
     req.checkBody("deadline").notEmpty().withMessage("deadline is required");
 
     let errors = req.validationErrors();
@@ -77,7 +80,7 @@ const createTask = async (req, res, next) => {
       try {
         const task = await pool.query(query, value);
         res.json({
-          task: task.rows[0],
+          data: task.rows[0],
           msg: "task added successfully",
           status: 200,
         });
@@ -131,7 +134,7 @@ const updateTask = async (req, res, next) => {
       try {
         const task = await pool.query(query, value);
         res.json({
-          task: task.rows[0],
+          data: task.rows[0],
           msg: "task updated successfully",
           status: 200,
         });
@@ -158,12 +161,16 @@ const changeUser = async (req, res, next) => {
     try {
       const task = await pool.query(query, value);
       res.json({
-        task: task.rows[0],
+        data: task.rows[0],
         msg: "user changed successfully",
         status: 200,
       });
     } catch (err) {
-      next({ msg: err, status: 300, u_msg: "error changing the assigned user" });
+      next({
+        msg: err,
+        status: 300,
+        u_msg: "error changing the assigned user",
+      });
     }
   } catch (err) {
     next(err);
@@ -181,7 +188,7 @@ const deleteTask = async (req, res, next) => {
       [task_id]
     );
     res.json({
-      task: task.rows[0],
+      data: task.rows[0],
       msg: "task successfully Deleted",
       status: 200,
     });

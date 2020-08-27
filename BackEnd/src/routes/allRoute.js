@@ -9,8 +9,9 @@ const tagController = require("../controllers/tagController");
 router.route("/user/:user_id").get(userController.getUser);
 
 // // CRUD on projects
-// router.route("/projects").get(projectController.getAllProjects);
-// router.route("/projects-enrolled").get(projectController.getProjectEnrolled);
+router.route("/projects").get(projectController.getAllProjects);
+// router.route("/project").get(projectController.getAllProjects);
+router.route("/project-enrolled").get(projectController.getProjectEnrolled);
 // router.route("/projects-create").post(projectController.createProject);
 // router.route("/projects-update").put(projectController.updateProject);
 // router.route("/projects-delete").delete(projectController.deleteProject);

@@ -12,6 +12,7 @@ import "./styles/layout.css";
 import "./styles/style.css";
 import "./components/common/commonStyle.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "react-datepicker/dist/react-datepicker.css"
 
 import App from "./App";
 

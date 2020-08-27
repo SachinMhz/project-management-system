@@ -2,25 +2,35 @@ import React, { useState } from "react";
 // import { FormInput } from "../../components/input";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
-import { loginToServer } from "../../actions/loginAction";
+import { createNewUser } from "../../actions/registerAction";
 
 const RegisterPage = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("Project Manager");
+
+  const clearForm = ()=>{
+    setEmail("")
+    setPassword("")
+    setDisplayName("")
+    setRole("Project Manager")
+  }
   return (
     <div className="container--center">
-      <br /><br /><br />
+      <br />
+      <br />
+      <br />
       <Form>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Display Name</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter name"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="formBasicEmail">
@@ -32,14 +42,6 @@ const RegisterPage = (props) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
-        <Form.Group>
-          <Form.Label>Role</Form.Label>
-          <Form.Control as="select">
-            <option>Project Manager</option>
-            <option>Team Leader</option>
-            <option>Engineer</option>
-          </Form.Control>
-        </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -49,10 +51,32 @@ const RegisterPage = (props) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
+        <Form.Group>
+          <Form.Label>Role</Form.Label>
+          <Form.Control
+            as="select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="Project Manager">Project Manager</option>
+            <option value="Team Leader">Team Leader</option>
+            <option value="Engineer">Engineer</option>
+          </Form.Control>
+        </Form.Group>
 
-        <Button variant="primary" block onClick={() => props.loginToServer("userName")}>
+        <Button
+          variant="primary"
+          block
+          onClick={() =>
+            props.createNewUser(displayName, email, password, role, clearForm)
+          }
+        >
           Create User
         </Button>
+        <br />
+        {props.register.error && (
+          <Alert variant="danger">{props.register.error}</Alert>
+        )}
       </Form>
     </div>
   );
@@ -60,24 +84,8 @@ const RegisterPage = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    state1: state,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loginToServer: (userDetail) => {
-      dispatch(loginToServer(userDetail));
-    },
-    // getProfile: (profile) => {
-    //   dispatch(getProfile(profile));
-    // },
-    // getFollowings: (followings) => {
-    //   dispatch(getFollowings(followings));
-    // },
-    // getFollowers: (followers) => {
-    //   dispatch(getFollowers(followers));
-    // },
+    register: state.register,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
+export default connect(mapStateToProps, { createNewUser })(RegisterPage);

@@ -8,3 +8,16 @@
   justify-self: center;
   margin: auto;
 }
+
+.link--button {
+  color: black;
+  width: 50px;
+}
+.link--button:hover {
+  color: black;
+  width: "100%";
+}
+
+.margin-bottom {
+  margin-bottom: 20px;
+}

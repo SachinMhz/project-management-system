@@ -32,19 +32,60 @@ const getUser = async (req, res, next) => {
     res.json(users.rows[0]);
   } catch (err) {
     next(err);
-    logger.error(err);
+  }
+};
+
+//get one user
+//method - get
+//url - /api/admin/user-pm
+const getProjectManagers = async (req, res, next) => {
+  try {
+    const users = await pool.query(
+      "SELECT * FROM users WHERE role = 'Project Manager' ORDER BY user_id ASC"
+    );
+    res.json(users.rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//get one user
+//method - get
+//url - /api/admin/user-tm
+const getTeamLeaders = async (req, res, next) => {
+  try {
+    const users = await pool.query(
+      "SELECT * FROM users WHERE role = 'Team Leader' ORDER BY user_id ASC"
+    );
+    res.json(users.rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//get one user
+//method - get
+//url - /api/admin/user-eng
+const getEngineers = async (req, res, next) => {
+  try {
+    const users = await pool.query(
+      "SELECT * FROM users WHERE role = 'Engineer' ORDER BY user_id ASC"
+    );
+    res.json(users.rows);
+  } catch (err) {
+    next(err);
   }
 };
 
 //get all users on project
 //method - get
-//url - /api/admin/users-on-project
+//url - /api/admin/users-on-project/:project_id
 const getAllUsersAssignedOnProject = async (req, res, next) => {
-  const project_id = req.body.project_id;
   try {
+    const project_id = req.params.project_id;
     const users = await pool.query(
       `WITH project_user_bridge AS (SELECT * FROM user_on_project where project_id = $1)
-          SELECT u.display_name, u.user_id, p.project_id FROM
+          SELECT u.display_name, u.user_id, p.project_id, u.email FROM
           users u JOIN project_user_bridge p 
           ON u.user_id = p.user_id
           WHERE role <> 'inactive' `,
@@ -53,7 +94,6 @@ const getAllUsersAssignedOnProject = async (req, res, next) => {
     res.json(users.rows);
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -152,6 +192,9 @@ const deleteUser = async (req, res, next) => {
 
 module.exports = {
   getUser,
+  getProjectManagers,
+  getTeamLeaders,
+  getEngineers,
   getAllUsers,
   getAllUsersAssignedOnProject,
   updateUser,

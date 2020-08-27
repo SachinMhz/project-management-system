@@ -4,7 +4,6 @@ const helper = require("../utils/helper");
 
 const saltRounds = 10; // saltRounds for bcrypt
 
-
 //login to server
 //method : POST
 //api : /api/auth/login
@@ -37,7 +36,7 @@ const login = async (req, res, next) => {
       if (user.rows.length === 0)
         next({ msg: "email doesn't exists", status: 200 });
 
-      const { user_id, hash } = user.rows[0];
+      const { user_id, hash, role, display_name } = user.rows[0];
       bcrypt.compare(password, hash, function (err, result) {
         //if password doesn't match result is false
         //but err is also false ???
@@ -45,8 +44,8 @@ const login = async (req, res, next) => {
           return next({ msg: "incorrect password", status: 200 });
         }
 
-        let token = helper.createToken({user_id});
-        res.json({ user_id, token });
+        let token = helper.createToken({ user_id });
+        res.json({ user_id, token, role, email, display_name });
       });
     }
   } catch (err) {
@@ -121,7 +120,11 @@ const register = async (req, res, next) => {
               // Store hash in your password DB.
             } catch (err) {
               console.log(err);
-              next({ msg: err, status: 300, u_msg: "error inserting new user" });
+              next({
+                msg: err,
+                status: 300,
+                u_msg: "error inserting new user",
+              });
             }
           });
         });

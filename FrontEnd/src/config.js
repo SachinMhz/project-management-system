@@ -14,13 +14,28 @@ const config = {
       register: "/auth/register",
     },
     users: {
-      users: "/users",
+      users: "/admin/users",
       user: "/admin/user",
       create: "/users/create",
       update: "/users/update",
       delete: "/users/delete",
+      pm: "/admin/user-pm",
+      tm: "/admin/user-tm",
+      eng: "/admin/user-eng",
+      onProject: "/admin/user-on-project",
     },
-    employee: "/employees",
+    projects: {
+      all: "/admin/projects",
+      add: "/admin/projects-create",
+      one: "/admin/project",
+      addUser: "/admin/user-on-project",
+    },
+    tasks: {
+      all: "/admin/tasks",
+      add: "/admin/tasks-create",
+      one: "/admin/project",
+      addUser: "/admin/user-on-project",
+    },
   },
 };
 

@@ -2,16 +2,32 @@ const pool = require("../db");
 
 //get all users
 //method - get
-//url - /api/admin/users
+//url - /api/admin/projects
 const getAllProjects = async (req, res, next) => {
   try {
     const projects = await pool.query(
-      "SELECT * FROM projects ORDER BY project_id ASC"
+      "SELECT projects.*, users.display_name FROM projects INNER JOIN users ON users.user_id = projects.manager_id ORDER BY project_id ASC"
     );
     res.json(projects.rows);
   } catch (err) {
     next(err);
     logger.error(err);
+  }
+};
+
+const getProjectInfo = async (req, res, next) => {
+  try {
+    const project_id = Number(req.params.project_id);
+    console.log("project_id", req.params);
+    const projects = await pool.query(
+      `SELECT projects.*, users.display_name FROM projects 
+        INNER JOIN users ON users.user_id = projects.manager_id 
+          WHERE project_id = $1 LIMIT 1`,
+      [project_id]
+    );
+    res.json({ data: projects.rows[0], msg: "project read success" });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -31,13 +47,12 @@ const getProjectEnrolled = async (req, res, next) => {
     res.json(projects.rows);
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
 //get all users on project
 //method - post
-//url - /api/admin/users-create
+//url - /api/admin/projects-create
 const createProject = async (req, res, next) => {
   try {
     req.checkBody("name").notEmpty().withMessage("Project Name is required");
@@ -74,7 +89,7 @@ const createProject = async (req, res, next) => {
         try {
           const project = await pool.query(query, value);
           res.json({
-            project: project.rows[0],
+            data: project.rows[0],
             msg: "project added successfully",
             status: 200,
           });
@@ -158,14 +173,50 @@ const deleteProject = async (req, res, next) => {
     });
   } catch (err) {
     next({ msg: "error loading from server", status: 300, err });
-    logger.error(err);
+  }
+};
+
+//get all users on project
+//method - post
+//url - /api/admin/user-to-project
+const addUserToProject = async (req, res, next) => {
+  try {
+    req.checkBody("user_id").notEmpty().withMessage("Assignee is required");
+    req.checkBody("project_id").notEmpty().withMessage("Project is required");
+
+    let errors = req.validationErrors();
+
+    if (errors) {
+      next({ msg: errors[0].msg, status: 300 });
+    } else {
+      const { project_id, user_id } = req.body;
+
+      let query = `INSERT INTO user_on_project (project_id, user_id)
+             VALUES ($1, $2 ) RETURNING *`;
+
+      let value = [project_id, user_id];
+      try {
+        const user_on_project = await pool.query(query, value);
+        res.json({
+          data: user_on_project.rows[0],
+          msg: "user added to project successfully",
+          status: 200,
+        });
+      } catch (err) {
+        next({ msg: err, status: 300, u_msg: "error inserting user to project" });
+      }
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
 module.exports = {
   getAllProjects,
+  getProjectInfo,
   getProjectEnrolled,
   createProject,
   updateProject,
   deleteProject,
+  addUserToProject,
 };

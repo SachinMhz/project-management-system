@@ -22,6 +22,18 @@ export default function reducer(state = INITIAL_STATE, action) {
         success: payload.msg,
         error: "",
       };
+    case taskAction.DELETE_TASK:
+      let newTaskList = state.tasks.filter(
+        (item) => payload.task.task_id !== item.task_id
+      );
+      return { ...state, tasks: newTaskList, success: "" };
+    case taskAction.UPDATE_TASK:
+      return {
+        ...state,
+        current_task: payload.task,
+        success: payload.msg,
+        error: "",
+      };
     case taskAction.ERROR_TASK:
       return { ...state, error: payload.msg, success: "" };
     case taskAction.ADD_USER_ON_TASK:

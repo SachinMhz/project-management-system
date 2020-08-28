@@ -21,7 +21,7 @@ const ProjectsScreen = (props) => {
     props.getAllProject();
   }, []);
 
-  if (props.login.status === "logOut") return <Redirect to="/login" />;
+  if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
   return (
     <div className="container--center">
       <h1>Projects</h1>

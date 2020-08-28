@@ -7,6 +7,10 @@ export const GET_TEAM_LEADERS = "GET_TEAM_LEADERS";
 export const GET_ENGINEERS = "GET_ENGINEERS";
 export const GET_USERS_ON_PROJECT = "GET_USERS_ON_PROJECT";
 export const GET_USERS_TAGGED_ON_PROJECT = "GET_USERS_TAGGED_ON_PROJECT";
+export const UPDATE_USER = "UPDATE_USER";
+export const DELETE_USER = "DELETE_USER";
+export const ERROR_USER = "ERROR_USER";
+export const CLEAR_USER_ERROR = "CLEAR_USER_ERROR";
 
 export function getUserInfo(user_id) {
   return async (dispatch) => {
@@ -138,6 +142,78 @@ export function getUsersEnrolledOnProject(project_id) {
     dispatch({
       type: GET_USERS_ON_PROJECT,
       payload: { users: data },
+    });
+  };
+}
+
+export function updateUser(display_name, email, role, user_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ email, display_name, role, user_id }),
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.users.update,
+      requestOptions
+    );
+    const data = await response.json();
+    // data : [{user},{user}}]
+    // console.log("update", data, display_name, email, role, user_id);
+    console.log("update", config.baseURL + config.endpoints.users.update);
+    let user = data.data;
+    if (user)
+      dispatch({
+        type: UPDATE_USER,
+        payload: { user, msg: "user updated" },
+      });
+    else
+      dispatch({
+        type: ERROR_USER,
+        payload: { msg: data.msg },
+      });
+  };
+}
+
+export function deleteUser(user_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ user_id }),
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.users.delete,
+      requestOptions
+    );
+    const data = await response.json();
+
+    console.log("delete", data, user_id);
+    // console.log("delete", config.baseURL + config.endpoints.users.delete);
+    let user = data.data;
+    if (user)
+      dispatch({
+        type: DELETE_USER,
+        payload: { user, msg: "user updated" },
+      });
+    else
+      dispatch({
+        type: ERROR_USER,
+        payload: { msg: data.msg },
+      });
+  };
+}
+
+export function clearUserError() {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_USER_ERROR,
     });
   };
 }

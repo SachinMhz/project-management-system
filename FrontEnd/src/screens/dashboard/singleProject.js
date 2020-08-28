@@ -8,6 +8,7 @@ import { getAllProject, getProjectInfo } from "../../actions/projectAction";
 import { getAllTaskFromProject } from "../../actions/taskAction";
 import AddUserToProject from "../../components/addUserToProject";
 import AddTask from "../../components/addTask";
+import UpdateProject from "../../components/updateProject";
 import AddProject from "./addProject";
 import TaskComponent from "../../components/taskComponent";
 
@@ -36,6 +37,9 @@ const SingleProjectScreen = (props) => {
     props.getAllTaskFromProject(state.project_id);
   }, []);
   const { current_project } = props.project;
+
+  if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
+  if (!current_project) return <Redirect to="/projects" />;
   return (
     <div className="container--center">
       <h3>Project Name: {current_project.name}</h3>
@@ -44,24 +48,19 @@ const SingleProjectScreen = (props) => {
       <br />
       {(role === "admin" || "Project_Manager") && (
         <>
-          <Button variant="primary" onClick={showUpdateModal} >
+          <Button variant="primary" onClick={showUpdateModal}>
             Update Project
           </Button>
-          <Button variant="primary" onClick={showAddUserModal} >
+          <Button variant="info" onClick={showAddUserModal}>
             Add User
           </Button>
-          <Button variant="primary" onClick={showAddTaskModal} >
+          <Button variant="primary" onClick={showAddTaskModal} block>
             Add Task
           </Button>
         </>
       )}
-      {(role === "admin" || "Project_Manager") && (
-        <Button variant="danger" onClick={showDeleteModal} >
-          Delete Project
-        </Button>
-      )}
       <Modal show={updateModal} onHide={closeUpdateModal}>
-        <AddProject />
+        <UpdateProject current_project={current_project} />
       </Modal>
       <Modal show={deleteModal} onHide={closeDeleteModal}>
         <AddProject />
@@ -69,7 +68,7 @@ const SingleProjectScreen = (props) => {
       <Modal show={addUserModal} onHide={closeAddUserModal}>
         <AddUserToProject project_id={current_project.project_id} />
       </Modal>
-      <Modal show={addTaskModal} onHide={closeAddTaskModal}>
+      <Modal show={addTaskModal} onHide={closeAddTaskModal} >
         <AddTask project_id={current_project.project_id} />
       </Modal>
       {props.task.tasks &&

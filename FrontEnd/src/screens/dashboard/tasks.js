@@ -7,7 +7,7 @@ import { getUserInfo } from "../../actions/userAction";
 import { getAllProject } from "../../actions/projectAction";
 import { Redirect } from "react-router-dom";
 import AddTask from "../../components/addTask";
-import ProjectComponent from "../../components/projectComponent";
+import TaskComponent from "../../components/taskComponent";
 
 const Tasks = (props) => {
   // console.log("props.user >>", props.users);
@@ -22,7 +22,8 @@ const Tasks = (props) => {
     props.getAllProject();
   }, []);
 
-  if (props.login.status === "logOut") return <Redirect to="/login" />;
+
+  if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
   return (
     <div className="container--center">
       <h1>Tasks</h1>

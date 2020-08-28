@@ -125,17 +125,7 @@ const updateProject = async (req, res, next) => {
     if (errors) {
       next({ msg: errors[0].msg, status: 300 });
     } else {
-      // const todo = await pool.query("SELECT * FROM todo ORDER BY id ASC");
       const { name, description, manager_id, project_id } = req.body;
-      //show custom msg if email already exist
-      // const checkEmail = await pool.query(
-      //   "SELECT email FROM users where email=$1",
-      //   [email]
-      // );
-      // if (checkEmail.rows.length > 0) {
-      //   next({ msg: "Email already exits", status: 300 });
-      // } else {
-
       let query = `UPDATE projects SET name = $1, description=$2, manager_id=$3
                      WHERE project_id = $4  RETURNING *`;
 
@@ -143,7 +133,7 @@ const updateProject = async (req, res, next) => {
       try {
         const project = await pool.query(query, value);
         res.json({
-          project: project.rows[0],
+          data: project.rows[0],
           msg: "project updated successfully",
           status: 200,
         });
@@ -158,7 +148,7 @@ const updateProject = async (req, res, next) => {
 
 //delete an user -- actually change role to inactive
 //method - put
-//url - /api/admin/users-delete
+//url - /api/admin/projects-delete
 const deleteProject = async (req, res, next) => {
   try {
     const { project_id } = req.body;
@@ -167,7 +157,7 @@ const deleteProject = async (req, res, next) => {
       [project_id]
     );
     res.json({
-      project: project.rows[0],
+      data: project.rows[0],
       msg: "project successfully Deleted",
       status: 200,
     });

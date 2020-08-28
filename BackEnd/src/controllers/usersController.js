@@ -105,6 +105,8 @@ const createUser = require("./authController").register;
 //method - put
 //url - /api/admin/users-update
 const updateUser = async (req, res, next) => {
+  const { email, display_name, role, user_id } = req.body;
+  console.log("user cont", email, display_name, role, user_id);
   try {
     req
       .checkBody("email")
@@ -112,13 +114,6 @@ const updateUser = async (req, res, next) => {
       .withMessage("Email is required")
       .isEmail()
       .withMessage("Please enter a proper email, eg: example@xyz.abc");
-
-    req
-      .checkBody("password")
-      .notEmpty()
-      .withMessage("Password is required")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters");
 
     req
       .checkBody("display_name")
@@ -132,40 +127,23 @@ const updateUser = async (req, res, next) => {
     if (errors) {
       next({ msg: errors[0].msg, status: 300 });
     } else {
-      // const todo = await pool.query("SELECT * FROM todo ORDER BY id ASC");
-      const { email, password, display_name, role, id } = req.body;
+      // const { email, display_name, role, user_id } = req.body;
 
-      //show custom msg if email already exist
-      // const checkEmail = await pool.query(
-      //   "SELECT email FROM users where email=$1",
-      //   [email]
-      // );
-      // if (checkEmail.rows.length > 0) {
-      //   next({ msg: "Email already exits", status: 300 });
-      // } else {
-      bcrypt.genSalt(saltRounds, function (err, salt) {
-        bcrypt.hash(password, salt, async function (err, hash) {
-          if (err) {
-            return next(err);
-          }
-          let query =
-            "UPDATE users SET email = $1, hash=$2, display_name=$3, role=$4  WHERE user_id = $5  RETURNING *";
+      let query =
+        "UPDATE users SET email = $1, display_name=$2, role=$3  WHERE user_id = $4  RETURNING *";
 
-          const value = [email, hash, display_name, role, id];
-          try {
-            const user = await pool.query(query, value);
-            res.json({
-              user: user.rows[0],
-              msg: "registered updated",
-              status: 200,
-            });
-            // Store hash in your password DB.
-          } catch (err) {
-            console.log(err);
-            next({ msg: err, status: 300, u_msg: "error updating" });
-          }
+      const value = [email, display_name, role, user_id];
+      try {
+        const user = await pool.query(query, value);
+        res.json({
+          data: user.rows[0],
+          msg: "user updated",
+          status: 200,
         });
-      });
+      } catch (err) {
+        console.log(err);
+        next({ msg: err, status: 300, u_msg: "error updating user" });
+      }
     }
   } catch (err) {
     next(err);
@@ -177,12 +155,12 @@ const updateUser = async (req, res, next) => {
 //url - /api/admin/users-delete
 const deleteUser = async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { user_id } = req.body;
     const user = await pool.query(
       "UPDATE users SET role = 'inactive'  WHERE user_id = $1 RETURNING *",
-      [id]
+      [user_id]
     );
-    res.json({ user: user.rows[0], msg: "successfully Deleted", status: 200 });
+    res.json({ data: user.rows[0], msg: "successfully Deleted", status: 200 });
   } catch (err) {
     next({ msg: "error loading from server", status: 300, err });
   }

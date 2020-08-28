@@ -16,9 +16,8 @@ const config = {
     users: {
       users: "/admin/users",
       user: "/admin/user",
-      create: "/users/create",
-      update: "/users/update",
-      delete: "/users/delete",
+      update: "/admin/users-update",
+      delete: "/admin/users-delete",
       pm: "/admin/user-pm",
       tm: "/admin/user-tm",
       eng: "/admin/user-eng",
@@ -30,12 +29,16 @@ const config = {
       add: "/admin/projects-create",
       one: "/admin/project",
       addUser: "/admin/user-on-project",
+      update: "/admin/projects-update",
+      delete: "/admin/projects-delete",
     },
     tasks: {
       all: "/admin/tasks",
       add: "/admin/tasks-create",
       one: "/admin/task",
       addUser: "/admin/user-on-project",
+      delete: "/admin/tasks-delete",
+      update: "/admin/tasks-update",
     },
     comments: {
       all: "/admin/comments",

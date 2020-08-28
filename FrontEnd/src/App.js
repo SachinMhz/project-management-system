@@ -20,20 +20,20 @@ const App = (props) => {
   return (
     <div>
       <div className="container--center">
-        <h1>Project Management System</h1>
+        <h1 style={{ textAlign: "center" }}>Project Management System</h1>
         {window.localStorage.getItem("token") && (
-          <>
-            <div>
+          <div style={{ flexDirection: "row" }}>
+            <span>
               User: {window.localStorage.getItem("display_name")} {"   "}
               Role: {window.localStorage.getItem("role")}
-            </div>
+            </span>
             <Button variant="primary" onClick={() => props.logOutUser()}>
               Log Out
             </Button>
-          </>
+          </div>
         )}
       </div>
-      <br/>
+      <br />
       <BrowserRouter>
         <div>
           <Route path="/" exact component={() => <Redirect to="/login" />} />
@@ -52,11 +52,7 @@ const App = (props) => {
             exact
             component={() => <SingleTaskScreen />}
           />
-          <Route
-            path="/users/"
-            exact
-            component={() => <UsersScreen />}
-          />
+          <Route path="/users/" exact component={() => <UsersScreen />} />
         </div>
       </BrowserRouter>
     </div>

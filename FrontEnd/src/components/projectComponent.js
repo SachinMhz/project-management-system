@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import { Link, Redirect } from "react-router-dom";
+import DeleteComponent from "./deleteComponent";
+import { connect } from "react-redux";
+import { deleteProject } from "../actions/projectAction";
 
 const ProjectComponent = (props) => {
   const {
@@ -13,12 +17,15 @@ const ProjectComponent = (props) => {
   } = props.project;
   const role = window.localStorage.getItem("role");
   const user_id = Number(window.localStorage.getItem("user_id"));
+  const [modal, setModal] = useState(false);
 
+  const handleModalClose = () => setModal(false);
+  const handleModalShow = () => setModal(true);
   return (
     <div style={{ marginBottom: 20 }}>
       <Card className="text-center">
         <Card.Header>
-          <Card.Title>{name}</Card.Title>
+          <Card.Title>Project: {name}</Card.Title>
           Project Manager - {display_name}
         </Card.Header>
         <Card.Body>
@@ -33,24 +40,34 @@ const ProjectComponent = (props) => {
                   state: { project_id },
                 }}
               >
-                <Button variant="primary" >
-                  Show Project
-                </Button>
+                <Button variant="primary">Show Project</Button>
               </Link>
-              {/* <Button variant="info" >
-                Update
-              </Button> */}
             </>
           )}
 
           {role === "admin" && (
-            <Button variant="danger" >
+            <Button variant="danger" onClick={handleModalShow}>
               Delete Project
             </Button>
           )}
         </Card.Body>
       </Card>
+      <Modal show={modal} onHide={handleModalClose}>
+        <DeleteComponent
+          value="Project"
+          onYesClicked={() => {
+            props.deleteProject(project_id);
+            handleModalClose();
+          }}
+          onNoClicked={handleModalClose}
+        />
+      </Modal>
     </div>
   );
 };
-export default ProjectComponent;
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+export default connect(mapStateToProps, { deleteProject })(ProjectComponent);

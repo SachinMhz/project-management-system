@@ -1,12 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
+import DeleteComponent from "./deleteComponent";
+import { connect } from "react-redux";
+import { deleteTask } from "../actions/taskAction";
 
 const TaskComponent = (props) => {
   const { title, description, display_name, user_id, task_id } = props.task;
   const role = window.localStorage.getItem("role");
   const current_user_id = Number(window.localStorage.getItem("user_id"));
+
+  const [modal, setModal] = useState(false);
+
+  const handleModalClose = () => setModal(false);
+  const handleModalShow = () => setModal(true);
 
   return (
     <div style={{ marginTop: 15, marginBottom: 15 }}>
@@ -31,10 +40,30 @@ const TaskComponent = (props) => {
             </>
           )}
 
-          {role === "admin" && <Button variant="danger">Delete Task</Button>}
+          {role === "admin" && (
+            <Button variant="danger" onClick={handleModalShow}>
+              Delete Task
+            </Button>
+          )}
         </Card.Body>
       </Card>
+
+      <Modal show={modal} onHide={handleModalClose}>
+        <DeleteComponent
+          value="Task"
+          onYesClicked={() => {
+            props.deleteTask(task_id);
+            handleModalClose();
+          }}
+          onNoClicked={handleModalClose}
+        />
+      </Modal>
     </div>
   );
 };
-export default TaskComponent;
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+export default connect(mapStateToProps, { deleteTask })(TaskComponent);

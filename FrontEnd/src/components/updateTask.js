@@ -6,31 +6,28 @@ import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
 import DatePicker from "react-datepicker";
 import { getUsersEnrolledOnProject } from "../actions/userAction";
-import { addTask, clearTaskError } from "../actions/taskAction";
+import { updateTask, clearTaskError } from "../actions/taskAction";
 
-const AddTask = (props) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState(new Date());
-  const [user_id, setUser_id] = useState("");
-  const [previous_user_id, setPreviousUser_id] = useState("");
+const UpdateTask = (props) => {
+  const { current_task } = props;
+  const [title, setTitle] = useState(current_task.title);
+  const [description, setDescription] = useState(current_task.description);
+  //   const [deadline, setDeadline] = useState(current_task.deadline);
+  const [user_id, setUser_id] = useState(current_task.user_id);
+  const [previous_user_id, setPreviousUser_id] = useState(
+    current_task.previous_user_id
+  );
   const userList = props.users.users;
   const project_id = props.project_id;
 
-  const clearForm = () => {
-    setTitle("");
-    setDescription("");
-    setUser_id("");
-  };
-
   useEffect(() => {
-    props.getUsersEnrolledOnProject(props.project_id);
+    props.getUsersEnrolledOnProject(current_task.project_id);
     props.clearTaskError();
   }, []);
 
   return (
     <div className="container--center">
-      <h1>Create New Task</h1>
+      <h1>Update Task</h1>
       <Form>
         <Form.Group>
           <Form.Label>Task Title</Form.Label>
@@ -86,28 +83,27 @@ const AddTask = (props) => {
             })}
           </Form.Control>
         </Form.Group>
-        <Form.Group>
+        {/* <Form.Group>
           <Form.Label>Deadline: </Form.Label>
           <div>
-            <DatePicker selected={deadline} onChange={setDeadline} />
+            <DatePicker value={deadline} onChange={setDeadline} />
           </div>
-        </Form.Group>
+        </Form.Group> */}
         <Button
           variant="primary"
           block
           onClick={() => {
-            props.addTask(
+            props.updateTask(
               title,
               description,
-              deadline,
               project_id,
               user_id,
               previous_user_id,
-              clearForm
+              current_task.task_id
             );
           }}
         >
-          Create Task
+          Update Task
         </Button>
         <br />
         {props.task.error && (
@@ -131,6 +127,6 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getUsersEnrolledOnProject,
-  addTask,
+  updateTask,
   clearTaskError,
-})(AddTask);
+})(UpdateTask);

@@ -115,12 +115,11 @@ const createTask = async (req, res, next) => {
 //url - /api/admin/tasks-update
 const updateTask = async (req, res, next) => {
   try {
+    req.checkBody("title").notEmpty().withMessage("title is required");
     req
       .checkBody("description")
       .notEmpty()
       .withMessage("Description is required");
-    req.checkBody("title").notEmpty().withMessage("title is required");
-    req.checkBody("deadline").notEmpty().withMessage("deadline is required");
 
     let errors = req.validationErrors();
 
@@ -130,20 +129,17 @@ const updateTask = async (req, res, next) => {
       const {
         title,
         description,
-        deadline,
         user_id,
-        project_id,
         previous_user_id,
         task_id,
       } = req.body;
 
-      let query = `UPDATE tasks SET title = $1, description=$2, deadline=$3, user_id= $4, previous_user_id=$5
-                     WHERE task_id = $6  RETURNING *`;
+      let query = `UPDATE tasks SET title = $1, description=$2, user_id= $3, previous_user_id=$4
+                     WHERE task_id = $5  RETURNING *`;
 
       let value = [
         title,
         description,
-        deadline,
         user_id,
         previous_user_id,
         task_id,

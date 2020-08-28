@@ -8,6 +8,8 @@ const INITIAL_STATE = {
   projectManagers: [],
   teamLeaders: [],
   engineers: [],
+  error: "",
+  success: "",
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -43,6 +45,30 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         users: payload.users,
+      };
+    case userAction.UPDATE_USER:
+      return {
+        ...state,
+        user: payload.user,
+        success: payload.msg,
+        error: "",
+      };
+    case userAction.ERROR_USER:
+      return {
+        ...state,
+        error: payload.msg,
+        success: "",
+      };
+    case userAction.DELETE_USER:
+      let newUserList = state.users.filter(
+        (item) => payload.user.user_id !== item.user_id
+      );
+      return { ...state, users: newUserList, success: "" };
+    case userAction.CLEAR_USER_ERROR:
+      return {
+        ...state,
+        error: "",
+        success: "",
       };
     default:
       return state;

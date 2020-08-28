@@ -18,9 +18,29 @@ export default function reducer(state = INITIAL_STATE, action) {
     case projectAction.GET_PROJECTS_ENROLLED:
       return { ...state, projects: payload.msg };
     case projectAction.ADD_PROJECT:
-      return { ...state, success: payload.msg, error: "" };
+      return {
+        ...state,
+        projects: [...state.projects, payload.project],
+        success: payload.msg,
+        error: "",
+      };
+    case projectAction.UPDATE_PROJECT:
+      return {
+        ...state,
+        // projects: [...state.projects, payload.project],
+        current_project: payload.project,
+        success: payload.msg,
+        error: "",
+      };
     case projectAction.ERROR:
       return { ...state, error: payload.msg, success: "" };
+    case projectAction.ERROR_PROJECT:
+      return { ...state, error: payload.msg, success: "" };
+    case projectAction.DELETE_PROJECT:
+      let newProjectList = state.projects.filter(
+        (item) => payload.project.project_id !== item.project_id
+      );
+      return { ...state, projects: newProjectList, success: "" };
     case projectAction.ADD_USER_ON_PROJECT:
       return { ...state, error: "", success: "User Added to Project" };
     case projectAction.CLEAR_ERROR_MSG:

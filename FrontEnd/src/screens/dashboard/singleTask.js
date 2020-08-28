@@ -8,6 +8,7 @@ import { getTaskInfo } from "../../actions/taskAction";
 import { getAllCommentsFromTask } from "../../actions/commentAction";
 import AddUserToProject from "../../components/addUserToProject";
 import AddComment from "../../components/addComment";
+import UpdateTask from "../../components/updateTask";
 import AddTag from "../../components/addTag";
 import CommentComponent from "../../components/commentComponent";
 
@@ -40,6 +41,8 @@ const SingleTaskScreen = (props) => {
     props.getAllCommentsFromTask(state.task_id);
   }, []);
   const { current_task } = props.task;
+  
+  if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
   return (
     <div className="container--center">
       <h3>Task Title: {current_task.title}</h3>
@@ -57,18 +60,13 @@ const SingleTaskScreen = (props) => {
           <Button variant="info" onClick={showAddTagModal} >
             Add Tag
           </Button>
-          <Button variant="success" onClick={showAddTaskModal} >
+          <Button variant="success" onClick={showAddTaskModal} block>
             Add Comment
           </Button>
         </>
       )}
-      {(role === "admin" || "Project_Manager") && (
-        <Button variant="danger" onClick={showDeleteModal} >
-          Delete Task
-        </Button>
-      )}
       <Modal show={updateModal} onHide={closeUpdateModal}>
-        <AddComment />
+        <UpdateTask current_task={current_task} />
       </Modal>
       <Modal show={addTagModal} onHide={closeAddTagModal}>
         <AddTag

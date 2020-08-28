@@ -14,7 +14,7 @@ const UserScreen = (props) => {
 
   const handleModalClose = () => setModal(false);
   const handleModalShow = () => setModal(true);
-  console.log("usrse", props.users.users);
+  // console.log("usrse", props.users.users);
   useEffect(() => {
     props.getAllUsers();
   }, []);
@@ -22,6 +22,8 @@ const UserScreen = (props) => {
   if (window.localStorage.getItem("role") !== "admin") {
     return <Redirect to="/login" />;
   }
+
+  if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
   return (
     <div className="container--center">
       <h1>Users</h1>

@@ -2,16 +2,18 @@ const router = require("express").Router();
 
 //loading middlewares
 const authenticate = require("./middlewares/authenticate");
+const adminAuth = require("./middlewares/adminAuth");
 
 //loading routes
-const adminRoute = require("./routes/adminRoute");
+const userRoute = require("./routes/userRoute");
 const authRoutes = require("./routes/authRoute");
-const allRoutes = require("./routes/allRoute")
+const adminRoute = require("./routes/adminRoute");
+// const allRoutes = require("./routes/allRoute")
 
 router.use("/auth", authRoutes);
 
-router.use("/admin",authenticate, adminRoute);
+router.use("", authenticate, userRoute);
 
-router.use("/all",authenticate, allRoutes);
+router.use("/admin", authenticate, adminAuth, adminRoute);
 
 module.exports = router;

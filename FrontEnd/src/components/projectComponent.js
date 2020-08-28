@@ -30,9 +30,12 @@ const ProjectComponent = (props) => {
         </Card.Header>
         <Card.Body>
           <Card.Text>
-            {description} {user_id} {manager_id}
+            {description}
           </Card.Text>
-          {(user_id === manager_id || role === "admin") && (
+          {(user_id === manager_id ||
+            role === "admin" ||
+            role === "Team Leader" ||
+            role === "Engineer") && (
             <>
               <Link
                 to={{

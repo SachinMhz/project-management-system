@@ -1,23 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import { FormInput } from "../../components/input";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import { connect } from "react-redux";
-import { createNewUser } from "../../actions/registerAction";
+import { createNewUser, clearErrorMsg } from "../../actions/registerAction";
 
 const RegisterPage = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [role, setRole] = useState("Project Manager");
+  const [role, setRole] = useState("");
 
-  const clearForm = ()=>{
-    setEmail("")
-    setPassword("")
-    setDisplayName("")
-    setRole("Project Manager")
-  }
+  const clearForm = () => {
+    setEmail("");
+    setPassword("");
+    setDisplayName("");
+    setRole("Project Manager");
+  };
+  useEffect(() => {
+    props.clearErrorMsg();
+  }, []);
   return (
     <div className="container--center">
       <br />
@@ -59,6 +62,7 @@ const RegisterPage = (props) => {
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
+            <option value="">Select Role</option>
             <option value="Project Manager">Project Manager</option>
             <option value="Team Leader">Team Leader</option>
             <option value="Engineer">Engineer</option>
@@ -78,6 +82,9 @@ const RegisterPage = (props) => {
         {props.register.error && (
           <Alert variant="danger">{props.register.error}</Alert>
         )}
+        {props.register.success && (
+          <Alert variant="success">{props.register.success}</Alert>
+        )}
       </Form>
     </div>
   );
@@ -89,4 +96,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { createNewUser })(RegisterPage);
+export default connect(mapStateToProps, { createNewUser, clearErrorMsg })(
+  RegisterPage
+);

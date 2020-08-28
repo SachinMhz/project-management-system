@@ -1,16 +1,18 @@
 import config from "../config";
 
+export const GET_PROJECTS_ENROLLED_BY_USERS = "GET_PROJECTS_ENROLLED_BY_USERS";
+export const ERROR_ADDING_USER_ON_PROJECT = "ERROR_ADDING_USER_ON_PROJECT";
+export const GET_PROJECTS_ENROLLED = "GET_PROJECTS_ENROLLED";
+export const ADD_USER_ON_PROJECT = "ADD_USER_ON_PROJECT";
 export const GET_PROJECT_INFO = "GET_PROJECT_INFO";
 export const GET_ALL_PROJECTS = "GET_ALL_PROJECTS";
-export const GET_PROJECTS_ENROLLED = "GET_PROJECTS_ENROLLED";
-export const ADD_PROJECT = "ADD_PROJECT";
+export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
 export const UPDATE_PROJECT = "UPDATE_PROJECT";
 export const DELETE_PROJECT = "DELETE_PROJECT";
 export const ERROR_PROJECT = "ERROR_PROJECT";
-export const ERROR_ADDING_USER_ON_PROJECT = "ERROR_ADDING_USER_ON_PROJECT";
-export const ADD_USER_ON_PROJECT = "ADD_USER_ON_PROJECT";
+export const ADD_PROJECT = "ADD_PROJECT";
+export const LOG_OUT = "LOG_OUT";
 export const ERROR = "ERROR";
-export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
 
 export function getAllProject() {
   return async (dispatch) => {
@@ -109,7 +111,7 @@ export function updateProject(name, description, manager_id, project_id) {
     // data : {user_id,display_name,role,.....//msg, status}
     // console.log("project-update", data);
     let project = data.data;
-    console.log(data,"project")
+    console.log(data, "project");
     if (project) {
       dispatch({
         type: UPDATE_PROJECT,
@@ -157,8 +159,7 @@ export function addUserToProject(project_id, user_id, clearFrom) {
   };
 }
 
-
-export function deleteProject( project_id) {
+export function deleteProject(project_id) {
   return async (dispatch) => {
     const requestOptions = {
       method: "DELETE",
@@ -188,6 +189,69 @@ export function deleteProject( project_id) {
     }
   };
 }
+
+export function getProjectEnrolledByUser(user_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.projects.enrolledByUser + `/${user_id}`,
+      requestOptions
+    );
+    const data = await response.json();
+    // data : {user_id,display_name,role,.....//msg, status}
+    console.log("project enrolled by user", data);
+    let projects = data.data;
+    if (projects) {
+      dispatch({
+        type: GET_PROJECTS_ENROLLED_BY_USERS,
+        payload: { projects },
+      });
+    } else {
+      dispatch({
+        type: ERROR,
+        payload: { msg: data.msg },
+      });
+    }
+  };
+}
+
+// export function getAccessToProject(project_id, user_id) {
+//   return async (dispatch) => {
+//     const requestOptions = {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: window.localStorage.getItem("token"),
+//       },
+//     };
+//     const response = await fetch(
+//       config.baseURL + config.endpoints.projects.accessByUser + `/${user_id}`,
+//       requestOptions
+//     );
+//     const data = await response.json();
+//     // data : {user_id,display_name,role,.....//msg, status}
+//     console.log("project enrolled by user", data);
+//     let projects = data.data;
+//     if (projects) {
+//       dispatch({
+//         type: GET_PROJECTS_ENROLLED_BY_USERS,
+//         payload: { projects },
+//       });
+//     } else {
+//       dispatch({
+//         type: ERROR,
+//         payload: { msg: data.msg },
+//       });
+//     }
+//   };
+// }
+
 
 export function clearProjectError() {
   return async (dispatch) => {

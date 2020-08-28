@@ -2,8 +2,11 @@ import config from "../config";
 
 export const CREATE_NEW_USER = "CREATE_NEW_USER";
 export const ERROR_CREATE_NEW_USER = "ERROR_CREATE_NEW_USER";
+export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
+export const LOG_OUT = "LOG_OUT";
 
-export function createNewUser(display_name, email, password, role, clearFrom) {
+export function createNewUser(display_name, email, password, _role, clearFrom) {
+  let role = _role === "" ? null : _role;
   return async (dispatch) => {
     const requestOptions = {
       method: "POST",
@@ -22,7 +25,7 @@ export function createNewUser(display_name, email, password, role, clearFrom) {
     if (user) {
       dispatch({
         type: CREATE_NEW_USER,
-        payload: { user, msg: "New User Created" },
+        payload: { user, msg: "New User Created", success: "New User Created" },
       });
       clearFrom();
     } else {
@@ -31,5 +34,13 @@ export function createNewUser(display_name, email, password, role, clearFrom) {
         payload: { msg: data.msg },
       });
     }
+  };
+}
+
+export function clearErrorMsg() {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_ERROR_MSG,
+    });
   };
 }

@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 import { logOutUser } from "../../actions/loginAction";
 import { getUserInfo } from "../../actions/userAction";
-import { getAllProject } from "../../actions/projectAction";
+import { getAllProject,getProjectEnrolledByUser } from "../../actions/projectAction";
 import { Redirect } from "react-router-dom";
 import AddProject from "./addProject";
 import ProjectComponent from "../../components/projectComponent";
@@ -18,7 +18,12 @@ const ProjectsScreen = (props) => {
   const handleModalShow = () => setModal(true);
 
   useEffect(() => {
-    props.getAllProject();
+    let role = window.localStorage.getItem("role");
+    let user_id = window.localStorage.getItem("user_id");
+    if(role ==="admin" || role==="Project Manager")
+      props.getAllProject();
+    else
+    props.getProjectEnrolledByUser(user_id)
   }, []);
 
   if (!window.localStorage.getItem("token")) return <Redirect to="/login" />;
@@ -37,7 +42,7 @@ const ProjectsScreen = (props) => {
       <Modal show={modal} onHide={handleModalClose}>
         <AddProject />
       </Modal>
-      {props.project.projects &&
+      {props.project.projects.length > 0 &&
         props.project.projects.map((project, index) => {
           return <ProjectComponent key={index} project={project} />;
         })}
@@ -56,5 +61,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   logOutUser,
   getUserInfo,
-  getAllProject,
+  getAllProject,getProjectEnrolledByUser
 })(ProjectsScreen);

@@ -36,13 +36,30 @@ const getProjectEnrolled = async (req, res, next) => {
   const user_id = req.body.user_id;
   try {
     const projects = await pool.query(
-      `WITH project_user_bridge AS (SELECT project_id FROM user_on_project where user_id = $1)
+      `WITH project_user_bridge AS (SELECT project_id FROM user_on_project where user_id = 17)
           SELECT  p.project_id, p.name FROM
           projects p JOIN project_user_bridge b 
-          ON p.project_id = b.project_id;`,
+          ON p.project_id = b.project_id`,
       [user_id]
     );
     res.json(projects.rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//get all users on project
+//method - get
+//url - /api/admin/projects-enrolled-by-user/:user_id
+const getProjectEnrolledByUser = async (req, res, next) => {
+  try {
+    const user_id = req.params.user_id;
+    const projects = await pool.query(
+      `SELECT DISTINCT p.project_id, u.user_id, p.name, p.description, p.manager_id FROM user_on_project u JOIN projects p
+      ON u.project_id = p.project_id WHERE user_id = $1 ORDER BY project_id ASC`,
+      [user_id]
+    );
+    res.json({ data: projects.rows, msg: "users fetched" });
   } catch (err) {
     next(err);
   }
@@ -216,6 +233,7 @@ module.exports = {
   getAllProjects,
   getProjectInfo,
   getProjectEnrolled,
+  getProjectEnrolledByUser,
   createProject,
   updateProject,
   deleteProject,

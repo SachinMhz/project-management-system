@@ -21,18 +21,19 @@ const HomeScreen = (props) => {
           Projects
         </Button>
       </Link>
-      
 
       {/* <Link to="/tasks">
         <Button variant="primary" block>
           Tasks
         </Button>
       </Link> */}
-      <Link to="/users">
-        <Button variant="primary" block>
-          Users
-        </Button>
-      </Link>
+      {window.localStorage.getItem("role") === "admin" && (
+        <Link to="/users">
+          <Button variant="primary" block>
+            Users
+          </Button>
+        </Link>
+      )}
     </div>
   );
 };

@@ -108,6 +108,11 @@ const updateUser = async (req, res, next) => {
   const { email, display_name, role, user_id } = req.body;
   console.log("user cont", email, display_name, role, user_id);
   try {
+    
+    req
+      .checkBody("display_name")
+      .notEmpty()
+      .withMessage("display name is required");
     req
       .checkBody("email")
       .notEmpty()
@@ -115,10 +120,6 @@ const updateUser = async (req, res, next) => {
       .isEmail()
       .withMessage("Please enter a proper email, eg: example@xyz.abc");
 
-    req
-      .checkBody("display_name")
-      .notEmpty()
-      .withMessage("display name is required");
 
     req.checkBody("role").notEmpty().withMessage("role is required");
 

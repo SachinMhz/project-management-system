@@ -27,6 +27,9 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, error: payload.msg, success: "" };
     case tagAction.CLEAR_ERROR_MSG:
       return { ...state, error: "", success: "" };
+
+    case tagAction.LOG_OUT:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

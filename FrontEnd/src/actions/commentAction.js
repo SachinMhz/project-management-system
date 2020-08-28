@@ -8,6 +8,7 @@ export const ERROR_COMMENT = "ERROR_COMMENT";
 export const ADD_USER_ON_COMMENT = "ADD_USER_ON_COMMENT";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
 export const UPDATE_COMMENT = "UPDATE_COMMENT";
+export const LOG_OUT = "LOG_OUT";
 
 export function getAllCommentsFromTask(task_id) {
   return async (dispatch) => {

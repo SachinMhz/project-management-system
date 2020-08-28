@@ -70,6 +70,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         error: "",
         success: "",
       };
+    case userAction.LOG_OUT:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

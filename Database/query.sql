@@ -75,3 +75,23 @@ CREATE TABLE tags(
 	  REFERENCES users(user_id)
       ON DELETE CASCADE
 );
+
+
+INSERT INTO users (display_name, email, hash , role)
+  VALUES 
+    ('Admin','admin@gmail.com','$2b$10$hQisEgFgNVpAB3cADBkpd.BVp7e14rMDtjj7ABN6E/rG3G0zuIx7.', 'admin'),
+    ('Project Manager','projectmanager@gmail.com','$2b$10$hQisEgFgNVpAB3cADBkpd.BVp7e14rMDtjj7ABN6E/rG3G0zuIx7.', 'Project Manager'),
+    ('Team Leader','teamleader@gmail.com','$2b$10$hQisEgFgNVpAB3cADBkpd.BVp7e14rMDtjj7ABN6E/rG3G0zuIx7.', 'Team Leader'),
+    ('Engineer','engineer@gmail.com','$2b$10$hQisEgFgNVpAB3cADBkpd.BVp7e14rMDtjj7ABN6E/rG3G0zuIx7.', 'Engineer');
+
+INSERT INTO projects (name, description, manager_id)
+  VALUES
+    ('An Awesome Project','This is an awesome description of an Awesome Project.',2);
+
+INSERT INTO tasks (project_id, title, description, deadline)
+  VALUES
+    (1, 'An Awesome Task','This is an awesome description of an Awesome Task.','2020-09-05');
+  
+INSERT INTO comments (task_id, commenter_id, commenter_name, comment)
+  VALUES
+    (1, 1,'Admin', 'This is an awesome comment for an Awesome Task.');

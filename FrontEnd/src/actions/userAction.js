@@ -11,6 +11,7 @@ export const UPDATE_USER = "UPDATE_USER";
 export const DELETE_USER = "DELETE_USER";
 export const ERROR_USER = "ERROR_USER";
 export const CLEAR_USER_ERROR = "CLEAR_USER_ERROR";
+export const LOG_OUT = "LOG_OUT";
 
 export function getUserInfo(user_id) {
   return async (dispatch) => {

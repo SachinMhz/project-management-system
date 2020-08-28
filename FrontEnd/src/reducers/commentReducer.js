@@ -43,6 +43,8 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, error: payload.msg, success: "" };
     case commentAction.CLEAR_ERROR_MSG:
       return { ...state, error: "", success: "" };
+    case commentAction.LOG_OUT:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

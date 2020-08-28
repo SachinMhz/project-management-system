@@ -8,6 +8,7 @@ export const UPDATE_TASK = "UPDATE_TASK";
 export const ERROR_TASK = "ERROR_TASK";
 export const ADD_USER_ON_TASK = "ADD_USER_ON_TASK";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
+export const LOG_OUT = "LOG_OUT";
 
 export function getAllTaskFromProject(project_id) {
   return async (dispatch) => {

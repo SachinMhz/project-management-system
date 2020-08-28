@@ -13,6 +13,8 @@ export default function reducer(state = INITIAL_STATE, action) {
   switch (type) {
     case projectAction.GET_ALL_PROJECTS:
       return { ...state, projects: payload.projects, error: "" };
+    case projectAction.GET_PROJECTS_ENROLLED_BY_USERS:
+      return { ...state, projects: payload.projects, error: "" };
     case projectAction.GET_PROJECT_INFO:
       return { ...state, current_project: payload.project };
     case projectAction.GET_PROJECTS_ENROLLED:
@@ -45,6 +47,9 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, error: "", success: "User Added to Project" };
     case projectAction.CLEAR_ERROR_MSG:
       return { ...state, error: "", success: "" };
+
+    case projectAction.LOG_OUT:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

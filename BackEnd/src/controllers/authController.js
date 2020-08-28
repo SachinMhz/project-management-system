@@ -44,7 +44,7 @@ const login = async (req, res, next) => {
           return next({ msg: "incorrect password", status: 200 });
         }
 
-        let token = helper.createToken({ user_id });
+        let token = helper.createToken({ user_id, role });
         res.json({ user_id, token, role, email, display_name });
       });
     }
@@ -59,6 +59,10 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   try {
     req
+      .checkBody("display_name")
+      .notEmpty()
+      .withMessage("display name is required");
+    req
       .checkBody("email")
       .notEmpty()
       .withMessage("Email is required")
@@ -71,11 +75,6 @@ const register = async (req, res, next) => {
       .withMessage("Password is required")
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters");
-
-    req
-      .checkBody("display_name")
-      .notEmpty()
-      .withMessage("display name is required");
 
     req.checkBody("role").notEmpty().withMessage("role is required");
 

@@ -40,6 +40,8 @@ export default function reducer(state = INITIAL_STATE, action) {
       return { ...state, error: "", success: "User Added to Task" };
     case taskAction.CLEAR_ERROR_MSG:
       return { ...state, error: "", success: "" };
+    case taskAction.LOG_OUT:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

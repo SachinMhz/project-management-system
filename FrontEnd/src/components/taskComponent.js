@@ -24,7 +24,7 @@ const TaskComponent = (props) => {
           <Card.Title>Task : {title}</Card.Title>
           <Card.Text>Task Assigned To - {display_name}</Card.Text>
           <Card.Text>Description:{description}</Card.Text>
-          {(user_id === current_user_id || role === "admin") && (
+          {role !== "Engineer" && (
             <>
               <Link
                 to={{

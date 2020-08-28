@@ -4,6 +4,7 @@ export const ADD_TAG = "ADD_TAG";
 export const ERROR_TAG = "ERROR_TAG";
 export const GET_USERS_TAGGED_ON_PROJECT = "GET_USERS_TAGGED_ON_PROJECT";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
+export const LOG_OUT = "LOG_OUT";
 
 export function addTag(task_id, tagged_id, tagger_id, clearForm) {
   let current_user_id = tagger_id === "" ? null : Number(tagger_id);

@@ -15,7 +15,25 @@ const getAllTasksFromProject = async (req, res, next) => {
     res.json({ data: tasks.rows, msg: "task fetched" });
   } catch (err) {
     next(err);
-    logger.error(err);
+  }
+};
+
+
+//get single task
+//method - get
+//url - /api/admin/task/:task_id
+const getTaskInfo = async (req, res, next) => {
+  try {
+    const { task_id } = req.params;
+    const task = await pool.query(
+      `SELECT t.*, u.display_name FROM tasks t
+        LEFT OUTER JOIN users u ON t.user_id = u.user_id
+        WHERE t.task_id = $1 LIMIT 1`,
+      [task_id]
+    );
+    res.json({ data: task.rows[0], msg: "task fetched" });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -32,7 +50,6 @@ const getUserTasksFromProject = async (req, res, next) => {
     res.json({ data: tasks.rows, msg: "task fetched" });
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -194,11 +211,11 @@ const deleteTask = async (req, res, next) => {
     });
   } catch (err) {
     next({ msg: "error loading from server", status: 300, err });
-    logger.error(err);
   }
 };
 
 module.exports = {
+  getTaskInfo,
   getAllTasksFromProject,
   getUserTasksFromProject,
   createTask,

@@ -10,12 +10,11 @@ const saltRounds = 10; // saltRounds for bcrypt
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await pool.query(
-      "SELECT * FROM users WHERE role <> 'inactive' ORDER BY user_id ASC"
+      "SELECT * FROM users WHERE role <> 'inactive' AND role <> 'admin'  ORDER BY user_id ASC"
     );
-    res.json(users.rows);
+    res.json({ data: users.rows, msg: "user fetch successful" });
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -186,7 +185,24 @@ const deleteUser = async (req, res, next) => {
     res.json({ user: user.rows[0], msg: "successfully Deleted", status: 200 });
   } catch (err) {
     next({ msg: "error loading from server", status: 300, err });
-    logger.error(err);
+  }
+};
+
+//get all users
+//method - get
+//url - /api/admin/users-tagged/:task_id
+const getTaggedUserInTask = async (req, res, next) => {
+  try {
+    const { task_id } = req.params;
+    const tag = await pool.query(
+      `SELECT t.*, u.display_name FROM tags t
+        INNER JOIN users u ON t.tagged_id=u.user_id
+        WHERE task_id = $1 ORDER BY tag_id ASC`,
+      [task_id]
+    );
+    res.json({ data: tag.rows, msg: "tagged users fetched successfully" });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -199,4 +215,5 @@ module.exports = {
   getAllUsersAssignedOnProject,
   updateUser,
   deleteUser,
+  getTaggedUserInTask,
 };

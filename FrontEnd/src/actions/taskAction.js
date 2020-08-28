@@ -37,30 +37,30 @@ export function getAllTaskFromProject(project_id) {
   };
 }
 
-// export function getTaskInfo(task_id) {
-//   return async (dispatch) => {
-//     const requestOptions = {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: window.localStorage.getItem("token"),
-//       },
-//     };
-//     const response = await fetch(
-//       config.baseURL + config.endpoints.tasks.one + `/${task_id}`,
-//       requestOptions
-//     );
-//     const data = await response.json();
-//     let task = data.data;
-//     console.log("singleTask", task);
-//     if (task) {
-//       dispatch({
-//         type: GET_TASK_INFO,
-//         payload: { task },
-//       });
-//     }
-//   };
-// }
+export function getTaskInfo(task_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.tasks.one + `/${task_id}`,
+      requestOptions
+    );
+    const data = await response.json();
+    let task = data.data;
+    // console.log("singleTask", task);
+    if (task) {
+      dispatch({
+        type: GET_TASK_INFO,
+        payload: { task },
+      });
+    }
+  };
+}
 
 export function addTask(
   title,

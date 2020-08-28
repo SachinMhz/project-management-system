@@ -7,16 +7,34 @@ import RegisterScreen from "./screens/auth/register";
 import HomeScreen from "./screens/dashboard/home";
 import ProjectsScreen from "./screens/dashboard/projects";
 import TasksScreen from "./screens/dashboard/tasks";
-import SingleProectScreen from "./screens/dashboard/singleProject";
+import SingleProjectScreen from "./screens/dashboard/singleProject";
+import SingleTaskScreen from "./screens/dashboard/singleTask";
+import UsersScreen from "./screens/dashboard/users";
 
 import { Route, Redirect, BrowserRouter } from "react-router-dom";
-import { withCookies } from "react-cookie";
+import Button from "react-bootstrap/esm/Button";
+import { connect } from "react-redux";
+import { logOutUser } from "./actions/loginAction";
 
 const App = (props) => {
   return (
     <div>
+      <div className="container--center">
+        <h1>Project Management System</h1>
+        {window.localStorage.getItem("token") && (
+          <>
+            <div>
+              User: {window.localStorage.getItem("display_name")} {"   "}
+              Role: {window.localStorage.getItem("role")}
+            </div>
+            <Button variant="primary" onClick={() => props.logOutUser()}>
+              Log Out
+            </Button>
+          </>
+        )}
+      </div>
+      <br/>
       <BrowserRouter>
-        Header Text
         <div>
           <Route path="/" exact component={() => <Redirect to="/login" />} />
           <Route path="/login" exact component={() => <LoginScreen />} />
@@ -27,7 +45,17 @@ const App = (props) => {
           <Route
             path="/project/:id"
             exact
-            component={() => <SingleProectScreen />}
+            component={() => <SingleProjectScreen />}
+          />
+          <Route
+            path="/task/:id"
+            exact
+            component={() => <SingleTaskScreen />}
+          />
+          <Route
+            path="/users/"
+            exact
+            component={() => <UsersScreen />}
           />
         </div>
       </BrowserRouter>
@@ -35,4 +63,10 @@ const App = (props) => {
   );
 };
 
-export default withCookies(App);
+const mapStateToProps = (state) => {
+  return {
+    login: state.login,
+  };
+};
+
+export default connect(mapStateToProps, { logOutUser })(App);

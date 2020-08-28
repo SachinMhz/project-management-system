@@ -11,11 +11,10 @@ const TaskComponent = (props) => {
   return (
     <div style={{ marginTop: 15, marginBottom: 15 }}>
       <Card className="text-center">
-        <Card.Header>
-          <Card.Title>{title}</Card.Title>
-        </Card.Header>
         <Card.Body>
-          <Card.Text>{description}</Card.Text>
+          <Card.Title>Task : {title}</Card.Title>
+          <Card.Text>Task Assigned To - {display_name}</Card.Text>
+          <Card.Text>Description:{description}</Card.Text>
           {(user_id === current_user_id || role === "admin") && (
             <>
               <Link
@@ -24,25 +23,16 @@ const TaskComponent = (props) => {
                   state: { task_id },
                 }}
               >
-                <Button variant="primary" block>
-                  Show Task
-                </Button>
+                <Button variant="primary">Show Task</Button>
               </Link>
-              {/* <Button variant="info" block>
+              {/* <Button variant="info" >
                 Update
               </Button> */}
             </>
           )}
 
-          {role === "admin" && (
-            <Button variant="danger" block>
-              Delete Task
-            </Button>
-          )}
+          {role === "admin" && <Button variant="danger">Delete Task</Button>}
         </Card.Body>
-        <Card.Footer className="text-muted">
-          Task Assigned To - {display_name}
-        </Card.Footer>
       </Card>
     </div>
   );

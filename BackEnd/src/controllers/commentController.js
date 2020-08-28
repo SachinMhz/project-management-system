@@ -2,18 +2,17 @@ const pool = require("../db");
 
 //get all users
 //method - get
-//url - /api/admin/comments
+//url - /api/admin/comments/:task_id
 const getAllCommentsFromTask = async (req, res, next) => {
   try {
-    const { task_id } = req.body;
+    const { task_id } = req.params;
     const comments = await pool.query(
       "SELECT * FROM comments WHERE task_id = $1 ORDER BY task_id ASC",
       [task_id]
     );
-    res.json(comments.rows);
+    res.json({ data: comments.rows, msg: "comment successfully fetched" });
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -30,7 +29,6 @@ const getComment = async (req, res, next) => {
     res.json(comment.rows[0]);
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -58,7 +56,7 @@ const createComment = async (req, res, next) => {
       try {
         const comment = await pool.query(query, value);
         res.json({
-          comment: comment.rows[0],
+          data: comment.rows[0],
           msg: "comment added successfully",
           status: 200,
         });
@@ -125,7 +123,6 @@ const deleteComment = async (req, res, next) => {
     });
   } catch (err) {
     next({ msg: "error loading from server", status: 300, err });
-    logger.error(err);
   }
 };
 

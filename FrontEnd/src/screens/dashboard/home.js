@@ -15,7 +15,6 @@ const HomeScreen = (props) => {
   if (props.login.status === "logOut") return <Redirect to="/login" />;
   return (
     <div className="container--center">
-      <h1> Projects Management System</h1>
       <Link to="/projects">
         <Button variant="primary" block>
           Projects
@@ -27,9 +26,11 @@ const HomeScreen = (props) => {
           Tasks
         </Button>
       </Link>
-      <Button variant="primary" block onClick={() => props.logOutUser()}>
-        Log Out
-      </Button>
+      <Link to="/users">
+        <Button variant="primary" block>
+          Users
+        </Button>
+      </Link>
     </div>
   );
 };

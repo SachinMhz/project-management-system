@@ -19,6 +19,7 @@ const LoginScreen = (props) => {
     <div className="container--center">
       <br />
       <br />
+      <h2>Login</h2>
       <br />
       <Form>
         <Form.Group controlId="formBasicEmail">

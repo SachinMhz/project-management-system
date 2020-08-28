@@ -11,14 +11,13 @@ const getAllProjects = async (req, res, next) => {
     res.json(projects.rows);
   } catch (err) {
     next(err);
-    logger.error(err);
+    
   }
 };
 
 const getProjectInfo = async (req, res, next) => {
   try {
     const project_id = Number(req.params.project_id);
-    console.log("project_id", req.params);
     const projects = await pool.query(
       `SELECT projects.*, users.display_name FROM projects 
         INNER JOIN users ON users.user_id = projects.manager_id 
@@ -30,6 +29,7 @@ const getProjectInfo = async (req, res, next) => {
     next(err);
   }
 };
+
 
 //get all users on project
 //method - get

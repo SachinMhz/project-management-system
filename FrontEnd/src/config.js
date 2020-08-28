@@ -23,6 +23,7 @@ const config = {
       tm: "/admin/user-tm",
       eng: "/admin/user-eng",
       onProject: "/admin/user-on-project",
+      taggedOnTask: "/admin/users-tagged",
     },
     projects: {
       all: "/admin/projects",
@@ -33,8 +34,18 @@ const config = {
     tasks: {
       all: "/admin/tasks",
       add: "/admin/tasks-create",
-      one: "/admin/project",
+      one: "/admin/task",
       addUser: "/admin/user-on-project",
+    },
+    comments: {
+      all: "/admin/comments",
+      one: "/admin/comment",
+      add: "/admin/comments-create",
+    },
+    tags: {
+      all: "/admin/tags",
+      one: "/admin/tag",
+      add: "/admin/tags-create",
     },
   },
 };

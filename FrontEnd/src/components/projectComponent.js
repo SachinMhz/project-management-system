@@ -19,6 +19,7 @@ const ProjectComponent = (props) => {
       <Card className="text-center">
         <Card.Header>
           <Card.Title>{name}</Card.Title>
+          Project Manager - {display_name}
         </Card.Header>
         <Card.Body>
           <Card.Text>
@@ -32,25 +33,22 @@ const ProjectComponent = (props) => {
                   state: { project_id },
                 }}
               >
-                <Button variant="primary" block>
+                <Button variant="primary" >
                   Show Project
                 </Button>
               </Link>
-              {/* <Button variant="info" block>
+              {/* <Button variant="info" >
                 Update
               </Button> */}
             </>
           )}
 
           {role === "admin" && (
-            <Button variant="danger" block>
+            <Button variant="danger" >
               Delete Project
             </Button>
           )}
         </Card.Body>
-        <Card.Footer className="text-muted">
-          Project Manager - {display_name}
-        </Card.Footer>
       </Card>
     </div>
   );

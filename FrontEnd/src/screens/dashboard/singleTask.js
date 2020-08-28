@@ -4,20 +4,21 @@ import Button from "react-bootstrap/esm/Button";
 import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 
-import { getAllProject, getProjectInfo } from "../../actions/projectAction";
-import { getAllTaskFromProject } from "../../actions/taskAction";
+import { getTaskInfo } from "../../actions/taskAction";
+import { getAllCommentsFromTask } from "../../actions/commentAction";
 import AddUserToProject from "../../components/addUserToProject";
-import AddTask from "../../components/addTask";
-import AddProject from "./addProject";
-import TaskComponent from "../../components/taskComponent";
+import AddComment from "../../components/addComment";
+import AddTag from "../../components/addTag";
+import CommentComponent from "../../components/commentComponent";
 
-const SingleProjectScreen = (props) => {
+const SingleTaskScreen = (props) => {
   const { state } = useLocation();
   const role = window.localStorage.getItem("role");
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [addUserModal, setAddUserModal] = useState(false);
   const [addTaskModal, setAddTaskModal] = useState(false);
+  const [addTagModal, setAddTagModal] = useState(false);
 
   const closeAddUserModal = () => setAddUserModal(false);
   const showAddUserModal = () => setAddUserModal(true);
@@ -31,50 +32,62 @@ const SingleProjectScreen = (props) => {
   const closeAddTaskModal = () => setAddTaskModal(false);
   const showAddTaskModal = () => setAddTaskModal(true);
 
+  const closeAddTagModal = () => setAddTagModal(false);
+  const showAddTagModal = () => setAddTagModal(true);
+
   useEffect(() => {
-    props.getProjectInfo(state.project_id);
-    props.getAllTaskFromProject(state.project_id);
+    props.getTaskInfo(state.task_id);
+    props.getAllCommentsFromTask(state.task_id);
   }, []);
-  const { current_project } = props.project;
+  const { current_task } = props.task;
   return (
     <div className="container--center">
-      <h3>Project Name: {current_project.name}</h3>
+      <h3>Task Title: {current_task.title}</h3>
 
-      <div>Project Description: {current_project.description}</div>
+      <div> Task description: {current_task.description}</div>
       <br />
       {(role === "admin" || "Project_Manager") && (
         <>
           <Button variant="primary" onClick={showUpdateModal} >
-            Update Project
+            Update Task
           </Button>
           <Button variant="primary" onClick={showAddUserModal} >
-            Add User
+            Assign User
           </Button>
-          <Button variant="primary" onClick={showAddTaskModal} >
-            Add Task
+          <Button variant="info" onClick={showAddTagModal} >
+            Add Tag
+          </Button>
+          <Button variant="success" onClick={showAddTaskModal} >
+            Add Comment
           </Button>
         </>
       )}
       {(role === "admin" || "Project_Manager") && (
         <Button variant="danger" onClick={showDeleteModal} >
-          Delete Project
+          Delete Task
         </Button>
       )}
       <Modal show={updateModal} onHide={closeUpdateModal}>
-        <AddProject />
+        <AddComment />
+      </Modal>
+      <Modal show={addTagModal} onHide={closeAddTagModal}>
+        <AddTag
+          task_id={current_task.task_id}
+          project_id={current_task.project_id}
+        />
       </Modal>
       <Modal show={deleteModal} onHide={closeDeleteModal}>
-        <AddProject />
+        <AddComment />
       </Modal>
       <Modal show={addUserModal} onHide={closeAddUserModal}>
-        <AddUserToProject project_id={current_project.project_id} />
+        <AddUserToProject task={current_task.task} />
       </Modal>
       <Modal show={addTaskModal} onHide={closeAddTaskModal}>
-        <AddTask project_id={current_project.project_id} />
+        <AddComment task_id={current_task.task_id} />
       </Modal>
-      {props.task.tasks &&
-        props.task.tasks.map((task, index) => {
-          return <TaskComponent key={index} task={task} />;
+      {props.comment.comments &&
+        props.comment.comments.map((comment, index) => {
+          return <CommentComponent key={index} comment={comment} />;
         })}
     </div>
   );
@@ -82,13 +95,12 @@ const SingleProjectScreen = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    project: state.project,
     task: state.task,
+    comment: state.comment,
   };
 };
 
 export default connect(mapStateToProps, {
-  getAllProject,
-  getProjectInfo,
-  getAllTaskFromProject,
-})(SingleProjectScreen);
+  getTaskInfo,
+  getAllCommentsFromTask,
+})(SingleTaskScreen);

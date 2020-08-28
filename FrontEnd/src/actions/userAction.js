@@ -6,6 +6,7 @@ export const GET_PROJECT_MANAGERS = "GET_PROJECT_MANAGERS";
 export const GET_TEAM_LEADERS = "GET_TEAM_LEADERS";
 export const GET_ENGINEERS = "GET_ENGINEERS";
 export const GET_USERS_ON_PROJECT = "GET_USERS_ON_PROJECT";
+export const GET_USERS_TAGGED_ON_PROJECT = "GET_USERS_TAGGED_ON_PROJECT";
 
 export function getUserInfo(user_id) {
   return async (dispatch) => {
@@ -29,7 +30,7 @@ export function getUserInfo(user_id) {
   };
 }
 
-export function getAllUsers(user_id) {
+export function getAllUsers() {
   return async (dispatch) => {
     const requestOptions = {
       method: "GET",
@@ -44,9 +45,11 @@ export function getAllUsers(user_id) {
     );
     const data = await response.json();
     // data : [{user},{user}}]
+    const users = data.data;
+
     dispatch({
       type: GET_ALL_USERS,
-      payload: { users: data },
+      payload: { users },
     });
   };
 }

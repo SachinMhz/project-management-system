@@ -13,7 +13,6 @@ const getAllTaggedTasks = async (req, res, next) => {
     res.json(tags.rows);
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -30,7 +29,6 @@ const getTaggedUser = async (req, res, next) => {
     res.json(tag.rows[0]);
   } catch (err) {
     next(err);
-    logger.error(err);
   }
 };
 
@@ -45,7 +43,7 @@ const createTag = async (req, res, next) => {
       .notEmpty()
       .withMessage("Tag should not be empty.");
     req
-      .checkBody("user_id")
+      .checkBody("tagger_id")
       .notEmpty()
       .withMessage("Tagger should not be empty.");
 
@@ -54,21 +52,21 @@ const createTag = async (req, res, next) => {
     if (errors) {
       next({ msg: errors[0].msg, status: 300 });
     } else {
-      const { task_id, user_id, tagged_id } = req.body;
+      const { task_id, tagger_id, tagged_id } = req.body;
       let query = `INSERT INTO tags (task_id, tagger_id,  tagged_id )
           VALUES ($1, $2, $3) RETURNING *`;
 
-      let value = [task_id, user_id, tagged_id];
+      let value = [task_id, tagger_id, tagged_id];
       try {
         const tag = await pool.query(query, value);
         res.json({
-          tag: tag.rows[0],
+          data: tag.rows[0],
           error: tag.rows[0] ? "" : "tag was not created, check req.body",
-          msg: "create query was success",
+          msg: "user tagged successfully",
           status: 200,
         });
       } catch (err) {
-        next({ msg: err, status: 300, u_msg: "error inserting tag" });
+        next({ msg: "error inserting tag", status: 300, err });
       }
     }
   } catch (err) {
@@ -133,7 +131,6 @@ const deleteTag = async (req, res, next) => {
     });
   } catch (err) {
     next({ msg: "error loading from database", status: 300, err });
-    logger.error(err);
   }
 };
 

@@ -22,6 +22,7 @@ const RegisterPage = (props) => {
     <div className="container--center">
       <br />
       <br />
+      <h2>Create New User</h2>
       <br />
       <Form>
         <Form.Group controlId="formBasicEmail">

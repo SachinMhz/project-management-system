@@ -22,6 +22,11 @@ export default function reducer(state = INITIAL_STATE, action) {
         success: payload.msg,
         error: "",
       };
+    case commentAction.DELETE_COMMENT:
+      let newCommentList = state.comments.filter(
+        (item) => payload.comment.comment_id !== item.comment_id
+      );
+      return { ...state, comments: newCommentList, success: "" };
     case commentAction.ERROR_COMMENT:
       return { ...state, error: payload.msg, success: "" };
     case commentAction.CLEAR_ERROR_MSG:

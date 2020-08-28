@@ -117,7 +117,7 @@ const deleteComment = async (req, res, next) => {
       [comment_id, user_id]
     );
     res.json({
-      comment: comment.rows[0],
+      data: comment.rows[0],
       msg: "comment successfully Deleted",
       status: 200,
     });

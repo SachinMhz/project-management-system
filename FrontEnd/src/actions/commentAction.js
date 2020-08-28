@@ -3,6 +3,7 @@ import config from "../config";
 export const GET_COMMENT_INFO = "GET_COMMENT_INFO";
 export const GET_ALL_COMMENTS_FROM_TASK = "GET_ALL_COMMENTS_FROM_TASK";
 export const ADD_COMMENT = "ADD_COMMENT";
+export const DELETE_COMMENT = "DELETE_COMMENT";
 export const ERROR_COMMENT = "ERROR_COMMENT";
 export const ADD_USER_ON_COMMENT = "ADD_USER_ON_COMMENT";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
@@ -37,31 +38,6 @@ export function getAllCommentsFromTask(task_id) {
     }
   };
 }
-
-// export function getTaskInfo(comment_id) {
-//   return async (dispatch) => {
-//     const requestOptions = {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: window.localStorage.getItem("token"),
-//       },
-//     };
-//     const response = await fetch(
-//       config.baseURL + config.endpoints.comments.one + `/${comment_id}`,
-//       requestOptions
-//     );
-//     const data = await response.json();
-//     let comment = data.data;
-//     // console.log("singleTask", comment);
-//     if (comment) {
-//       dispatch({
-//         type: GET_COMMENT_INFO,
-//         payload: { comment },
-//       });
-//     }
-//   };
-// }
 
 export function addComment(
   task_id,
@@ -106,37 +82,45 @@ export function addComment(
   };
 }
 
-// export function addUserToTask(comment_id, user_id, clearFrom) {
-//   return async (dispatch) => {
-//     const requestOptions = {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: window.localStorage.getItem("token"),
-//       },
-//       body: JSON.stringify({ comment_id, user_id }),
-//     };
-//     const response = await fetch(
-//       config.baseURL + config.endpoints.comments.addUser,
-//       requestOptions
-//     );
-//     const data = await response.json();
-//     // data : {user_id,display_name,role,.....//msg, status}
-//     console.log("comment", data);
-//     let comment = data.data;
-//     if (comment) {
-//       dispatch({
-//         type: ADD_USER_ON_COMMENT,
-//       });
-//       clearFrom();
-//     } else {
-//       dispatch({
-//         type: ERROR,
-//         payload: { msg: data.msg },
-//       });
-//     }
-//   };
-// }
+export function deleteComment(comment_id, user_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        comment_id: Number(comment_id),
+        user_id: Number(user_id),
+      }),
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.comments.delete,
+      requestOptions
+    );
+    const data = await response.json();
+    // data : {user_id,display_name,role,.....//msg, status}
+    console.log(
+      "comment delete",
+      data,
+      comment_id,
+      config.baseURL + config.endpoints.comments.delete
+    );
+    let comment = data.data;
+    if (comment) {
+      dispatch({
+        type: DELETE_COMMENT,
+        payload: { comment, msg: data.msg },
+      });
+    } else {
+      dispatch({
+        type: ERROR_COMMENT,
+        payload: { msg: data.msg },
+      });
+    }
+  };
+}
 
 export function clearCommentError() {
   return async (dispatch) => {

@@ -44,6 +44,7 @@ const config = {
       all: "/admin/comments",
       one: "/admin/comment",
       add: "/admin/comments-create",
+      delete: "/admin/comments-delete",
     },
     tags: {
       all: "/admin/tags",

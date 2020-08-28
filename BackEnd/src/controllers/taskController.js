@@ -18,7 +18,6 @@ const getAllTasksFromProject = async (req, res, next) => {
   }
 };
 
-
 //get single task
 //method - get
 //url - /api/admin/task/:task_id
@@ -137,18 +136,44 @@ const updateTask = async (req, res, next) => {
       let query = `UPDATE tasks SET title = $1, description=$2, user_id= $3, previous_user_id=$4
                      WHERE task_id = $5  RETURNING *`;
 
-      let value = [
-        title,
-        description,
-        user_id,
-        previous_user_id,
-        task_id,
-      ];
+      let value = [title, description, user_id, previous_user_id, task_id];
       try {
         const task = await pool.query(query, value);
         res.json({
           data: task.rows[0],
           msg: "task updated successfully",
+          status: 200,
+        });
+      } catch (err) {
+        next({ msg: err, status: 300, u_msg: "error updating task" });
+      }
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+//update an user
+//method - put
+//url - /api/admin/tasks-update
+const assignUserToTask = async (req, res, next) => {
+  try {
+    req.checkBody("user_id").notEmpty().withMessage("user is required");
+    let errors = req.validationErrors();
+
+    if (errors) {
+      next({ msg: errors[0].msg, status: 300 });
+    } else {
+      const { user_id, task_id } = req.body;
+
+      let query = `UPDATE tasks SET  user_id= $1 WHERE task_id = $2  RETURNING *`;
+
+      let value = [user_id, task_id];
+      try {
+        const task = await pool.query(query, value);
+        res.json({
+          data: task.rows[0],
+          msg: "user Assigned successfully",
           status: 200,
         });
       } catch (err) {
@@ -218,4 +243,5 @@ module.exports = {
   updateTask,
   deleteTask,
   changeUser,
+  assignUserToTask,
 };

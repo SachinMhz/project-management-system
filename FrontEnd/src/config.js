@@ -31,7 +31,7 @@ const config = {
       addUser: "/user-on-project",
       update: "/projects-update",
       delete: "/admin/projects-delete",
-      enrolledByUser: "/projects-enrolled-by-user"
+      enrolledByUser: "/projects-enrolled-by-user",
     },
     tasks: {
       all: "/tasks",
@@ -40,6 +40,7 @@ const config = {
       addUser: "/user-on-project",
       delete: "/tasks-delete",
       update: "/tasks-update",
+      assignUser: "/tasks-assign-user",
     },
     comments: {
       all: "/comments",

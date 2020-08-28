@@ -9,6 +9,7 @@ import { getAllCommentsFromTask } from "../../actions/commentAction";
 import { getTaskInfo } from "../../actions/taskAction";
 import { getTaggedUsersInTask } from "../../actions/tagAction";
 import AddUserToProject from "../../components/addUserToProject";
+import AssignUserToTask from "../../components/assignUserToTask";
 import AddComment from "../../components/addComment";
 import UpdateTask from "../../components/updateTask";
 import AddTag from "../../components/addTag";
@@ -102,7 +103,7 @@ const SingleTaskScreen = (props) => {
         <AddComment />
       </Modal>
       <Modal show={addUserModal} onHide={closeAddUserModal}>
-        <AddUserToProject task={current_task.task} />
+        <AssignUserToTask current_task={current_task} />
       </Modal>
       <Modal show={addTaskModal} onHide={closeAddTaskModal}>
         <AddComment task_id={current_task.task_id} />

@@ -23,7 +23,9 @@ router.route("/user-eng").get(userController.getEngineers);
 router.route("/projects").get(projectController.getAllProjects);
 router.route("/project/:project_id").get(projectController.getProjectInfo);
 router.route("/projects-enrolled").get(projectController.getProjectEnrolled);
-router.route("/projects-enrolled-by-user/:user_id").get(projectController.getProjectEnrolledByUser);
+router
+  .route("/projects-enrolled-by-user/:user_id")
+  .get(projectController.getProjectEnrolledByUser);
 // router.route("/projects-create").post(projectController.createProject);
 router.route("/projects-update").put(projectController.updateProject);
 // router.route("/projects-delete").delete(projectController.deleteProject);
@@ -36,6 +38,7 @@ router.route("/task/:task_id").get(taskController.getTaskInfo);
 router.route("/tasks-user").get(taskController.getUserTasksFromProject);
 router.route("/tasks-create").post(taskController.createTask);
 router.route("/tasks-update").put(taskController.updateTask);
+router.route("/tasks-assign-user").put(taskController.assignUserToTask);
 router.route("/tasks-change-user").put(taskController.changeUser);
 router.route("/tasks-delete").delete(taskController.deleteTask);
 

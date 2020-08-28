@@ -7,6 +7,7 @@ export const DELETE_TASK = "DELETE_TASK";
 export const UPDATE_TASK = "UPDATE_TASK";
 export const ERROR_TASK = "ERROR_TASK";
 export const ADD_USER_ON_TASK = "ADD_USER_ON_TASK";
+export const ASSIGN_TASK_TO_USER = "ASSIGN_TASK_TO_USER";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
 export const LOG_OUT = "LOG_OUT";
 
@@ -154,6 +155,45 @@ export function updateTask(
     if (task) {
       dispatch({
         type: UPDATE_TASK,
+        payload: { task, msg: data.msg },
+      });
+    } else {
+      dispatch({
+        type: ERROR_TASK,
+        payload: { msg: data.msg },
+      });
+    }
+  };
+}
+
+export function assignUserToTask(user_id, task_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        user_id: user_id === "" ? null : Number(user_id),
+        task_id: task_id === "" ? null : Number(task_id),
+      }),
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.tasks.assignUser,
+      requestOptions
+    );
+    const data = await response.json();
+    // data : {user_id,display_name,role,.....//msg, status}
+    console.log(
+      "task-update",
+      data,
+      config.baseURL + config.endpoints.tasks.assignUser
+    );
+    let task = data.data;
+    if (task) {
+      dispatch({
+        type: ASSIGN_TASK_TO_USER,
         payload: { task, msg: data.msg },
       });
     } else {

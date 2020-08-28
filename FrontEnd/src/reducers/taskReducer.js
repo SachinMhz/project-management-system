@@ -34,6 +34,13 @@ export default function reducer(state = INITIAL_STATE, action) {
         success: payload.msg,
         error: "",
       };
+    case taskAction.ASSIGN_TASK_TO_USER:
+      return {
+        ...state,
+        current_task: payload.task,
+        success: payload.msg,
+        error: "",
+      };
     case taskAction.ERROR_TASK:
       return { ...state, error: payload.msg, success: "" };
     case taskAction.ADD_USER_ON_TASK:

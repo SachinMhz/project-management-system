@@ -49,6 +49,7 @@ router.route("/comments-delete").delete(commentController.deleteComment);
 
 //CRUD on tasks
 router.route("/tags").get(tagController.getAllTaggedTasks);
+router.route("/tags-users/:task_id").get(tagController.getTaggedUsersOnTask);
 // router.route("/tag").get(tagController.get);
 router.route("/tags-create").post(tagController.createTag);
 // router.route("/tags-update").put(tagController.updateComment);

@@ -45,11 +45,13 @@ const config = {
       one: "/admin/comment",
       add: "/admin/comments-create",
       delete: "/admin/comments-delete",
+      update: "/admin/comments-update",
     },
     tags: {
       all: "/admin/tags",
       one: "/admin/tag",
       add: "/admin/tags-create",
+      taggedUser: "/admin/tags-users",
     },
   },
 };

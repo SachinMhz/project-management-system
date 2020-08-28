@@ -27,6 +27,18 @@ export default function reducer(state = INITIAL_STATE, action) {
         (item) => payload.comment.comment_id !== item.comment_id
       );
       return { ...state, comments: newCommentList, success: "" };
+    case commentAction.UPDATE_COMMENT:
+      let newCommentList2 = state.comments.map((item) => {
+        if (payload.comment.comment_id === item.comment_id)
+          return payload.comment;
+        else return item;
+      });
+      return {
+        ...state,
+        comments: newCommentList2,
+        success: payload.msg,
+        error: "",
+      };
     case commentAction.ERROR_COMMENT:
       return { ...state, error: payload.msg, success: "" };
     case commentAction.CLEAR_ERROR_MSG:

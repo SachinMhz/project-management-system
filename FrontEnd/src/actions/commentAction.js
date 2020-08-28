@@ -7,6 +7,7 @@ export const DELETE_COMMENT = "DELETE_COMMENT";
 export const ERROR_COMMENT = "ERROR_COMMENT";
 export const ADD_USER_ON_COMMENT = "ADD_USER_ON_COMMENT";
 export const CLEAR_ERROR_MSG = "CLEAR_ERROR_MSG";
+export const UPDATE_COMMENT = "UPDATE_COMMENT";
 
 export function getAllCommentsFromTask(task_id) {
   return async (dispatch) => {
@@ -113,6 +114,46 @@ export function deleteComment(comment_id, user_id) {
         type: DELETE_COMMENT,
         payload: { comment, msg: data.msg },
       });
+    } else {
+      dispatch({
+        type: ERROR_COMMENT,
+        payload: { msg: data.msg },
+      });
+    }
+  };
+}
+
+export function updateComment(comment_msg, comment_id, task_id) {
+  return async (dispatch) => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        comment: comment_msg,
+        comment_id: Number(comment_id),
+      }),
+    };
+    const response = await fetch(
+      config.baseURL + config.endpoints.comments.update,
+      requestOptions
+    );
+    const data = await response.json();
+    // data : {user_id,display_name,role,.....//msg, status}
+    console.log(
+      "comment-update",
+      data,
+      config.baseURL + config.endpoints.comments.update
+    );
+    let comment = data.data;
+    if (comment) {
+      dispatch({
+        type: UPDATE_COMMENT,
+        payload: { comment, msg: data.msg },
+      });
+      // getAllCommentsFromTask(task_id);
     } else {
       dispatch({
         type: ERROR_COMMENT,

@@ -15,6 +15,7 @@ const HomeScreen = (props) => {
   if (props.login.status === "logOut") return <Redirect to="/login" />;
   return (
     <div className="container--center">
+      <h2> DashBoard </h2>
       <Link to="/projects">
         <Button variant="primary" block>
           Projects

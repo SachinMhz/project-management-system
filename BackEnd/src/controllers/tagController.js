@@ -18,6 +18,24 @@ const getAllTaggedTasks = async (req, res, next) => {
 
 //get all users
 //method - get
+//url - /api/admin/tags-users/:task_id
+const getTaggedUsersOnTask = async (req, res, next) => {
+  try {
+    const { task_id } = req.params;
+    const tag = await pool.query(
+      `SELECT DISTINCT tagged_id, display_name, email, user_id  FROM tags 
+      INNER JOIN users ON tags.tagged_id = users.user_id
+      WHERE task_id = $1`,
+      [task_id]
+    );
+    res.json({ data: tag.rows, msg: "tagged user fetched success" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//get all users
+//method - get
 //url - /api/admin/tags
 const getTaggedUser = async (req, res, next) => {
   try {
@@ -74,40 +92,6 @@ const createTag = async (req, res, next) => {
   }
 };
 
-//update an user
-//method - put
-//url - /api/admin/tags-update
-const updateTag = async (req, res, next) => {
-  try {
-    req.checkBody("tag").notEmpty().withMessage("Tag should not be empty.");
-
-    let errors = req.validationErrors();
-
-    if (errors) {
-      next({ msg: errors[0].msg, status: 300 });
-    } else {
-      const { tag, tag_id } = req.body;
-
-      let query = `UPDATE tags SET tag = $1
-                     WHERE tag_id = $2  RETURNING *`;
-
-      let value = [tag, tag_id];
-      try {
-        const tag = await pool.query(query, value);
-        res.json({
-          tag: tag.rows[0],
-          msg: "tag updated successfully",
-          status: 200,
-        });
-      } catch (err) {
-        next({ msg: err, status: 300, u_msg: "error updating tag" });
-      }
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
 //delete an user -- actually change role to inactive
 //method - put
 //url - /api/admin/tags-delete
@@ -138,4 +122,5 @@ module.exports = {
   getAllTaggedTasks,
   createTag,
   deleteTag,
+  getTaggedUsersOnTask,
 };

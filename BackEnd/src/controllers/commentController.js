@@ -93,7 +93,7 @@ const updateComment = async (req, res, next) => {
       try {
         const comment = await pool.query(query, value);
         res.json({
-          comment: comment.rows[0],
+          data: comment.rows[0],
           msg: "comment updated successfully",
           status: 200,
         });

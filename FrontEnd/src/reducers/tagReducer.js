@@ -21,7 +21,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case tagAction.GET_USERS_TAGGED_ON_PROJECT:
       return {
         ...state,
-        taggedUsers: payload.users,
+        taggedUsers: payload.taggedUsers,
       };
     case tagAction.ERROR_TAG:
       return { ...state, error: payload.msg, success: "" };

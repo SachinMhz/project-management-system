@@ -22,7 +22,7 @@ export function addTag(task_id, tagged_id, tagger_id, clearForm) {
     );
     const data = await response.json();
     // data : {user_id,display_name,role,.....//msg, status}
-    console.log("tag", data, task_id, tagger_id);
+    // console.log("tag", data, task_id, tagger_id);
     let tag = data.data;
     if (tag) {
       dispatch({
@@ -49,20 +49,25 @@ export function getTaggedUsersInTask(task_id) {
       },
     };
     const response = await fetch(
-      config.baseURL + config.endpoints.users.taggedOnTask + `/${task_id}`,
+      config.baseURL + config.endpoints.tags.taggedUser + `/${task_id}`,
       requestOptions
     );
     const data = await response.json();
     console.log(
       "tag action",
       data,
-      config.baseURL + config.endpoints.users.taggedOnTask + `/${task_id}`
+      config.baseURL + config.endpoints.tags.taggedUser + `/${task_id}`
     );
     // data : [{user},{user}}]
-    dispatch({
-      type: GET_USERS_TAGGED_ON_PROJECT,
-      payload: { users: data },
-    });
+    let taggedUsers = data.data;
+    if (taggedUsers) {
+      dispatch({
+        type: GET_USERS_TAGGED_ON_PROJECT,
+        payload: { taggedUsers },
+      });
+    } else {
+      console.log("tagged users not fetched");
+    }
   };
 }
 

@@ -33,7 +33,7 @@
 
 
 
-4. Go to "http://localhost:8080/" in browser
+4. Go to "http://localhost:3000/" in browser
 
 
 login information in the email.

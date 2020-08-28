@@ -46,7 +46,8 @@ const SingleProjectScreen = (props) => {
 
       <div>Project Description: {current_project.description}</div>
       <br />
-      {role !== "Engineer" && (
+
+      {(role === "admin" || role === "Project Manager") && (
         <>
           <Button variant="primary" onClick={showUpdateModal}>
             Update Project
@@ -54,10 +55,12 @@ const SingleProjectScreen = (props) => {
           <Button variant="info" onClick={showAddUserModal}>
             Add User
           </Button>
-          <Button variant="primary" onClick={showAddTaskModal} block>
-            Add Task
-          </Button>
         </>
+      )}
+      {role !== "Engineer" && (
+        <Button variant="primary" onClick={showAddTaskModal} block>
+          Add Task
+        </Button>
       )}
       <Modal show={updateModal} onHide={closeUpdateModal}>
         <UpdateProject current_project={current_project} />

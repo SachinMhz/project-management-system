@@ -24,21 +24,22 @@ const TaskComponent = (props) => {
           <Card.Title>Task : {title}</Card.Title>
           <Card.Text>Task Assigned To - {display_name}</Card.Text>
           <Card.Text>Description:{description}</Card.Text>
-          {role !== "Engineer" && (
-            <>
-              <Link
-                to={{
-                  pathname: "/task/" + task_id,
-                  state: { task_id },
-                }}
-              >
-                <Button variant="primary">Show Task</Button>
-              </Link>
-              {/* <Button variant="info" >
+          {role !== "Engineer" ||
+            (user_id == window.localStorage.getItem("user_id") && (
+              <>
+                <Link
+                  to={{
+                    pathname: "/task/" + task_id,
+                    state: { task_id },
+                  }}
+                >
+                  <Button variant="primary">Show Task</Button>
+                </Link>
+                {/* <Button variant="info" >
                 Update
               </Button> */}
-            </>
-          )}
+              </>
+            ))}
 
           {role === "admin" && (
             <Button variant="danger" onClick={handleModalShow}>

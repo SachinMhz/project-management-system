@@ -6,7 +6,7 @@ const saltRounds = 10; // saltRounds for bcrypt
 
 //get all users
 //method - get
-//url - /api/admin/users
+//url - /api/users
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await pool.query(
@@ -20,7 +20,7 @@ const getAllUsers = async (req, res, next) => {
 
 //get one user
 //method - get
-//url - /api/admin/user
+//url - /api/user
 const getUser = async (req, res, next) => {
   try {
     const user_id = Number(req.params.user_id);
@@ -36,7 +36,7 @@ const getUser = async (req, res, next) => {
 
 //get one user
 //method - get
-//url - /api/admin/user-pm
+//url - /api/user-pm
 const getProjectManagers = async (req, res, next) => {
   try {
     const users = await pool.query(
@@ -50,7 +50,7 @@ const getProjectManagers = async (req, res, next) => {
 
 //get one user
 //method - get
-//url - /api/admin/user-tm
+//url - /api/user-tm
 const getTeamLeaders = async (req, res, next) => {
   try {
     const users = await pool.query(
@@ -64,7 +64,7 @@ const getTeamLeaders = async (req, res, next) => {
 
 //get one user
 //method - get
-//url - /api/admin/user-eng
+//url - /api/user-eng
 const getEngineers = async (req, res, next) => {
   try {
     const users = await pool.query(
@@ -78,7 +78,7 @@ const getEngineers = async (req, res, next) => {
 
 //get all users on project
 //method - get
-//url - /api/admin/users-on-project/:project_id
+//url - /api/users-on-project/:project_id
 const getAllUsersAssignedOnProject = async (req, res, next) => {
   try {
     const project_id = req.params.project_id;
@@ -108,7 +108,6 @@ const updateUser = async (req, res, next) => {
   const { email, display_name, role, user_id } = req.body;
   console.log("user cont", email, display_name, role, user_id);
   try {
-    
     req
       .checkBody("display_name")
       .notEmpty()
@@ -119,7 +118,6 @@ const updateUser = async (req, res, next) => {
       .withMessage("Email is required")
       .isEmail()
       .withMessage("Please enter a proper email, eg: example@xyz.abc");
-
 
     req.checkBody("role").notEmpty().withMessage("role is required");
 
@@ -169,7 +167,7 @@ const deleteUser = async (req, res, next) => {
 
 //get all users
 //method - get
-//url - /api/admin/users-tagged/:task_id
+//url - /api/users-tagged/:task_id
 const getTaggedUserInTask = async (req, res, next) => {
   try {
     const { task_id } = req.params;
@@ -185,6 +183,24 @@ const getTaggedUserInTask = async (req, res, next) => {
   }
 };
 
+// //get all users
+// //method - get
+// //url - /api/users-tasks/:task_id
+// const getUserAssignedOnTask = async (req, res, next) => {
+//   try {
+//     const { task_id } = req.params;
+//     const tag = await pool.query(
+//       `SELECT t.*, u.display_name FROM tags t
+//         INNER JOIN users u ON t.tagged_id=u.user_id
+//         WHERE task_id = $1 ORDER BY tag_id ASC`,
+//       [task_id]
+//     );
+//     res.json({ data: tag.rows, msg: "tagged users fetched successfully" });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 module.exports = {
   getUser,
   getProjectManagers,
@@ -195,4 +211,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getTaggedUserInTask,
+  // getUserAssignedOnTask,
 };

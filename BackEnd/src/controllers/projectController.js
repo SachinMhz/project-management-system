@@ -11,7 +11,6 @@ const getAllProjects = async (req, res, next) => {
     res.json(projects.rows);
   } catch (err) {
     next(err);
-    
   }
 };
 
@@ -29,7 +28,6 @@ const getProjectInfo = async (req, res, next) => {
     next(err);
   }
 };
-
 
 //get all users on project
 //method - get
@@ -126,19 +124,28 @@ const updateProject = async (req, res, next) => {
       next({ msg: errors[0].msg, status: 300 });
     } else {
       const { name, description, manager_id, project_id } = req.body;
-      let query = `UPDATE projects SET name = $1, description=$2, manager_id=$3
+      //show custom msg if project name already exist
+      const checkName = await pool.query(
+        "SELECT name FROM projects WHERE name=$1 AND project_id <> $2",
+        [name, project_id]
+      );
+      if (checkName.rows.length > 0) {
+        next({ msg: "Project Name already taken", status: 300 });
+      } else {
+        let query = `UPDATE projects SET name = $1, description=$2, manager_id=$3
                      WHERE project_id = $4  RETURNING *`;
 
-      let value = [name, description, manager_id, project_id];
-      try {
-        const project = await pool.query(query, value);
-        res.json({
-          data: project.rows[0],
-          msg: "project updated successfully",
-          status: 200,
-        });
-      } catch (err) {
-        next({ msg: err, status: 300, u_msg: "error updating project" });
+        let value = [name, description, manager_id, project_id];
+        try {
+          const project = await pool.query(query, value);
+          res.json({
+            data: project.rows[0],
+            msg: "project updated successfully",
+            status: 200,
+          });
+        } catch (err) {
+          next({ msg: err, status: 300, u_msg: "error updating project" });
+        }
       }
     }
   } catch (err) {
@@ -193,7 +200,11 @@ const addUserToProject = async (req, res, next) => {
           status: 200,
         });
       } catch (err) {
-        next({ msg: err, status: 300, u_msg: "error inserting user to project" });
+        next({
+          msg: err,
+          status: 300,
+          u_msg: "error inserting user to project",
+        });
       }
     }
   } catch (err) {
